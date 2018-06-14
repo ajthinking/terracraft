@@ -1,0 +1,214 @@
+html{
+  width: 100%;
+  height: 100%;
+}
+
+body{
+  overflow-x: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.navbar.always-open {
+    border-radius: 0;
+}
+.navbar.always-open .navbar-header {
+  float: none;
+}
+.navbar.always-open .navbar-toggle {
+  display: block;
+}
+.navbar.always-open .navbar-collapse {
+  border-top: 1px solid transparent;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+}
+.navbar.always-open .navbar-collapse.collapse {
+  display: none!important;
+}
+.navbar.always-open .navbar-nav {
+  float: none!important;
+  margin: 7.5px -15px;
+}
+.navbar.always-open .navbar-nav>li {
+  float: none;
+}
+.navbar.always-open .navbar-nav>li>a {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.action_button{
+    margin: auto;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    z-index: 100;
+    text-align: center;
+}
+
+
+.cbutton{
+  border: 50px;
+  background-color: #43b2e9;
+  border: 6px solid #1d87bb;
+  z-index: 1;
+  position: relative;
+  bottom: 0;
+  margin: auto;
+  border-radius: 50%;
+  height: 100px;
+  width: 100px;
+  text-align: center;
+  margin-bottom: 15px;
+  font-weight: bold;
+  opacity: 0.7;
+}
+
+#map{
+  height: 100%;
+  width: 100%;
+}
+
+.map{
+
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  width: auto;
+  height: auto;
+
+}
+
+#throne{
+
+  top: 40px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  width: auto;
+  height: auto;
+}
+
+#council{
+
+  top: 40px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  width: auto;
+  height: auto;
+}
+
+#admin{
+
+  top: 40px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  width: auto;
+  height: auto;
+}
+
+.header {
+    display: table;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: url(../img/splash.png) no-repeat center center scroll;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+}
+
+.nerfpadding{
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.nerfmargin{
+  margin:0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    text-transform: uppercase;
+    font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    /*font-family: 'Open Sans', sans-serif;*/
+    color: #000000;
+    font-weight: 400;
+    opacity: 0.6;
+}
+
+p {
+    font-size: 20px;
+    font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight: 400;
+}
+
+.text-vertical-center {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.text-vertical-center h1 {
+    margin: 0;
+    padding: 0;
+    font-size: 4.5em;
+    font-weight: 700;
+}
+
+.btn-outline {
+    margin-top: 15px;
+    border: solid 2px #000;
+    font-size: 20px;
+    font-weight: bold;
+    color: #000;
+    background: #fff;
+    transition: all .3s ease-in-out;
+    opacity: 0.65;
+}
+
+.btn-outline:hover,
+.btn-outline:focus,
+.btn-outline:active,
+.btn-outline.active {
+    border: solid 2px #fff;
+    color: #000;
+    background: #fff;
+    opacity: 0.8;
+}
+
+
+
+/* centered columns styles */
+.row-centered {
+    text-align:center;
+}
+.col-centered {
+    display:inline-block;
+    float:none;
+    /* reset the text-align */
+    text-align:left;
+    /* inline-block space fix */
+    margin-right:-4px;
+}
+
+.img-responsive {
+    margin: 0 auto;
+    padding-left: 100px;
+}
+
+.marginb{
+  margin-bottom: 20px;
+}

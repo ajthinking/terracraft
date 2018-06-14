@@ -1,0 +1,23 @@
+
+// Fonts
+@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
+
+// Variables
+@import "variables";
+
+// Map
+@import "map";
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+html{
+  width: 100%;
+  height: 100%;
+}
+
+body{
+  overflow-x: hidden;
+  width: 100%;
+  height: 100%;
+}
