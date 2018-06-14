@@ -1041,9 +1041,6 @@ map.on('moveend', function () {
             map.removeLayer(gjLayer);
         }
     }
-    if (!gps) {
-        player.marker.setLatLng(map.getCenter());
-    }
 });
 
 $("body").bind("loaded", drawDiagram);
@@ -1105,15 +1102,17 @@ function drawPolygon(id) {
         pps.push([polygon_points[i].lat, polygon_points[i].lng]);
     }
     pps.push([polygon_points[0].lat, polygon_points[0].lng]);
-    polygon = L.polygon(pps, {
-        color: "red",
-        fillColor: getRandomColor(),
-        weight: 0.5,
-        fill: false,
-        opacity: 1.0,
-        fillOpacity: 0.20,
-        smoothFactor: 0
-    }).addTo(map).bindPopup("" + id);
+    if (Math.random() < 0.05) {
+        polygon = L.polygon(pps, {
+            color: "red",
+            fillColor: getRandomColor(),
+            weight: 0.5,
+            fill: "red",
+            opacity: 1.0,
+            fillOpacity: 0.20,
+            smoothFactor: 0
+        }).addTo(map).bindPopup("" + id);
+    }
 }
 
 function cellToGeoJSON(id) {
@@ -1213,17 +1212,18 @@ function generateDiagram() {
 
 function drawDiagram() {
     setTimeout(function () {
+        console.time('calculate');
         console.time('draw');
         if (gjLayer) {
             map.removeLayer(gjLayer);
         } else {}
         var geojsonObjects = [];
-        console.log("Cells: " + s.diagram.cells.length);
+        //console.log("Cells: " + s.diagram.cells.length);
         $.each(s.diagram.cells, function (indexCells, cell) {
             if (cell.site.r > s.minY + 3 && cell.site.r < s.maxY - 3 && cell.site.c > s.minX + 3 && cell.site.c < s.maxX - 3) {
                 var point = s.points[indexCells];
                 var polygon_points = [];
-                //drawPolygon(cell.site.voronoiId);
+                drawPolygon(cell.site.voronoiId);
                 if (cell.halfedges.length > 0) {
                     geojsonObjects.push(cellToGeoJSON(cell.site.voronoiId));
                 } else {
@@ -1231,6 +1231,7 @@ function drawDiagram() {
                 }
             }
         });
+        console.timeEnd('calculate');
 
         gjLayer = L.geoJson(geojsonObjects, {
             //feature.geometry.properties.id
