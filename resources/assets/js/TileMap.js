@@ -4,7 +4,6 @@ import Config from './Config'
 
 export default class TileMap {
     constructor() {
-        this.points = [];
         this.map = L.map('map',{zoomControl:false}).setView(Config.startPoint, Config.startZoom);
         this.state = this.getState()
         this.addTileLayer()
@@ -121,8 +120,6 @@ export default class TileMap {
 
     drawDiagram() {    
         setTimeout(function() {
-            //console.time('calculate');
-            //console.time('draw');
             if(this.gjLayer) {
                 this.map.removeLayer(this.gjLayer);
             } else {
@@ -135,7 +132,7 @@ export default class TileMap {
                     
                     if(cell.halfedges.length > 0) {
                         geojsonObjects.push(this.cellToGeoJSON(cell.site.voronoiId));
-                        if(cell.halfedges.length == 11) {
+                        if(cell.halfedges.length == 9) {
                             this.drawPolygon(cell.site.voronoiId);
                         }
                     } else {
@@ -143,10 +140,8 @@ export default class TileMap {
                     }
                 }
             }.bind(this));
-            //console.timeEnd('calculate');
     
             this.gjLayer = L.geoJson(geojsonObjects, {
-                //feature.geometry.properties.id
                 style: function(feature) {
     
                     var fill = false;
@@ -174,10 +169,12 @@ export default class TileMap {
                     return myStyle;
                 },
                 onEachFeature: function (feature, layer) {
-                    layer.bindPopup("Owner: " + feature.properties.owner + "<br> Land: 52 acres" + "<br> Strength: Weak" );
+                    //layer.bindPopup("Owner: " + feature.properties.owner + "<br> Land: 52 acres" + "<br> Strength: Weak" );
+                    layer.on('click', function() {
+                        alert("Clicked! Using custom callback!");
+                    });
                 }
             }).addTo(this.map);
-            //console.timeEnd('draw');
         }.bind(this), 1);        
     }
 
@@ -227,14 +224,20 @@ export default class TileMap {
             pps.push([polygon_points[0].lat,polygon_points[0].lng]);
             
             var polygon = L.polygon(pps,{
-                                color: "red",
-                                fillColor: "red", //this.getRandomColor(),
-                                weight: 0.5,
-                                fill: "red",
-                                opacity: 1.0,
-                                fillOpacity: 0.20,
-                                smoothFactor: 0
-                            }).addTo(this.map).bindPopup("" + id);
+                color: "red",
+                fillColor: "red",
+                weight: 0.5,
+                fill: "red",
+                opacity: 1.0,
+                fillOpacity: 0.20,
+                smoothFactor: 0
+            });
+            
+            polygon.on('click', function(feature, layer) {
+                alert("Im clicked!");
+            });
+            
+            polygon.addTo(this.map);
             
     }
 
@@ -292,14 +295,5 @@ export default class TileMap {
     
         return polygon;
     
-    }
-    
-    getRandomColor() {
-        var letters = '0123456789ABCDEF'.split('');
-        var color = '#';
-        for (var i = 0; i < 6; i++ ) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
     }
 }

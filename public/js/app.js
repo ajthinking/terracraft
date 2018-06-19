@@ -21691,7 +21691,6 @@ var TileMap = function () {
     function TileMap() {
         _classCallCheck(this, TileMap);
 
-        this.points = [];
         this.map = L.map('map', { zoomControl: false }).setView(__WEBPACK_IMPORTED_MODULE_2__Config__["a" /* default */].startPoint, __WEBPACK_IMPORTED_MODULE_2__Config__["a" /* default */].startZoom);
         this.state = this.getState();
         this.addTileLayer();
@@ -21815,8 +21814,6 @@ var TileMap = function () {
         key: 'drawDiagram',
         value: function drawDiagram() {
             setTimeout(function () {
-                //console.time('calculate');
-                //console.time('draw');
                 if (this.gjLayer) {
                     this.map.removeLayer(this.gjLayer);
                 } else {}
@@ -21828,7 +21825,7 @@ var TileMap = function () {
 
                         if (cell.halfedges.length > 0) {
                             geojsonObjects.push(this.cellToGeoJSON(cell.site.voronoiId));
-                            if (cell.halfedges.length == 11) {
+                            if (cell.halfedges.length == 9) {
                                 this.drawPolygon(cell.site.voronoiId);
                             }
                         } else {
@@ -21836,10 +21833,8 @@ var TileMap = function () {
                         }
                     }
                 }.bind(this));
-                //console.timeEnd('calculate');
 
                 this.gjLayer = L.geoJson(geojsonObjects, {
-                    //feature.geometry.properties.id
                     style: function style(feature) {
 
                         var fill = false;
@@ -21867,10 +21862,12 @@ var TileMap = function () {
                         return myStyle;
                     },
                     onEachFeature: function onEachFeature(feature, layer) {
-                        layer.bindPopup("Owner: " + feature.properties.owner + "<br> Land: 52 acres" + "<br> Strength: Weak");
+                        //layer.bindPopup("Owner: " + feature.properties.owner + "<br> Land: 52 acres" + "<br> Strength: Weak" );
+                        layer.on('click', function () {
+                            alert("Clicked! Using custom callback!");
+                        });
                     }
                 }).addTo(this.map);
-                //console.timeEnd('draw');
             }.bind(this), 1);
         }
     }, {
@@ -21921,13 +21918,19 @@ var TileMap = function () {
 
             var polygon = L.polygon(pps, {
                 color: "red",
-                fillColor: "red", //this.getRandomColor(),
+                fillColor: "red",
                 weight: 0.5,
                 fill: "red",
                 opacity: 1.0,
                 fillOpacity: 0.20,
                 smoothFactor: 0
-            }).addTo(this.map).bindPopup("" + id);
+            });
+
+            polygon.on('click', function (feature, layer) {
+                alert("Im clicked!");
+            });
+
+            polygon.addTo(this.map);
         }
     }, {
         key: 'cellToGeoJSON',
@@ -21983,16 +21986,6 @@ var TileMap = function () {
             };
 
             return polygon;
-        }
-    }, {
-        key: 'getRandomColor',
-        value: function getRandomColor() {
-            var letters = '0123456789ABCDEF'.split('');
-            var color = '#';
-            for (var i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color;
         }
     }]);
 
