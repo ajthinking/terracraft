@@ -784,8 +784,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
 
-var d = __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d;
-
 var Geometry = function () {
     function Geometry() {
         _classCallCheck(this, Geometry);
@@ -796,8 +794,8 @@ var Geometry = function () {
         value: function latLngToXY(p) {
             var dLat = 1 / 111111;
             var dLng = 1 / (111111 * Geometry.cos(p.lat));
-            var x = p.lng / (this.d * dLng);
-            var y = p.lat / (this.d * dLat);
+            var x = p.lng / (this.Config.d * dLng);
+            var y = p.lat / (this.Config.d * dLat);
             return [x, y];
         }
     }, {
@@ -810,24 +808,24 @@ var Geometry = function () {
         value: function latLngToXY(p) {
             var dLat = 1 / 111111;
             var dLng = 1 / (111111 * Geometry.cos(p.lat));
-            var x = p.lng / (d * dLng);
-            var y = p.lat / (d * dLat);
+            var x = p.lng / (__WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d * dLng);
+            var y = p.lat / (__WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d * dLat);
             return [x, y];
         }
     }, {
         key: 'dLngFromY',
         value: function dLngFromY(y) {
             var dLat = 1 / 111111;
-            var lat = y * dLat * d;
+            var lat = y * dLat * __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d;
             return 1 / (111111 * Geometry.cos(lat));
         }
     }, {
         key: 'XYtoLatLng',
         value: function XYtoLatLng(x, y) {
             var dLat = 1 / 111111;
-            var lat = y * (d * dLat);
+            var lat = y * (__WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d * dLat);
             var dLng = 1 / (111111 * Geometry.cos(lat));
-            var lng = x * d * dLng;
+            var lng = x * __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d * dLng;
             return L.latLng(lat, lng);
         }
     }]);
@@ -21691,47 +21689,52 @@ var TileMap = function () {
         _classCallCheck(this, TileMap);
 
         this.points = [];
-        this.padding = 10;
-        this.map = L.map('map', { zoomControl: false }).setView([59.3294, 18.0686], 16);
+        this.map = L.map('map', { zoomControl: false }).setView(__WEBPACK_IMPORTED_MODULE_2__Config__["a" /* default */].startPoint, __WEBPACK_IMPORTED_MODULE_2__Config__["a" /* default */].startZoom);
         this.state = this.getState();
-
-        L.tileLayer('https://api.mapbox.com/v4/mapbox.pencil/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoianVyaXNvbyIsImEiOiIzOTlkMDYxZTI1MGVmNGMxMTQ4OTVjNDE3N2I4ZWFmYiJ9.IRWCUNP1235EmbzVBhpCqw', {
-            maxZoom: 20,
-            minZoom: 5,
-            attribution: 'i',
-            id: 'examples.map-i875mjb7'
-        }).addTo(this.map);
-
-        // EVENTS
-        this.loadedEvent = jQuery.Event("loaded");
-        $("body").bind("loaded", this.drawDiagram.bind(this));
-
-        this.map.on('zoom', function () {
-            this.lastZoom = this.map.getZoom();
-        }.bind(this));
-
-        this.map.on('moveend', function () {
-            var center = this.map.getCenter();
-            var xyCenter = __WEBPACK_IMPORTED_MODULE_0__Geometry__["a" /* default */].latLngToXY(center);
-            var xCenter = xyCenter[0];
-            var yCenter = xyCenter[1];
-            if (Math.abs(xCenter - this.xLastCenter) > this.padding / 2 || Math.abs(yCenter - this.yLastCenter) > this.padding / 2 || this.lastZoom != this.map.getZoom()) {
-                if (this.map.getZoom() > 15) {
-                    this.state = this.getState();
-                    this.state.diagram = this.generateDiagram();
-                    this.load();
-                } else {
-                    // ZOOM IN TO DRAW!
-                    this.map.removeLayer(gjLayer);
-                }
-            }
-        }.bind(this));
-
+        this.addTileLayer();
+        this.addEvents();
         this.load();
         this.state.diagram = this.generateDiagram();
     }
 
     _createClass(TileMap, [{
+        key: 'addEvents',
+        value: function addEvents() {
+            this.loadedEvent = jQuery.Event("loaded");
+            $("body").bind("loaded", this.drawDiagram.bind(this));
+
+            this.map.on('zoom', function () {
+                this.lastZoom = this.map.getZoom();
+            }.bind(this));
+
+            this.map.on('moveend', function () {
+                var center = this.map.getCenter();
+                var xyCenter = __WEBPACK_IMPORTED_MODULE_0__Geometry__["a" /* default */].latLngToXY(center);
+                var xCenter = xyCenter[0];
+                var yCenter = xyCenter[1];
+                if (Math.abs(xCenter - this.xLastCenter) > __WEBPACK_IMPORTED_MODULE_2__Config__["a" /* default */].padding / 2 || Math.abs(yCenter - this.yLastCenter) > __WEBPACK_IMPORTED_MODULE_2__Config__["a" /* default */].padding / 2 || this.lastZoom != this.map.getZoom()) {
+                    if (this.map.getZoom() > 15) {
+                        this.state = this.getState();
+                        this.state.diagram = this.generateDiagram();
+                        this.load();
+                    } else {
+                        // ZOOM IN TO DRAW!
+                        this.map.removeLayer(gjLayer);
+                    }
+                }
+            }.bind(this));
+        }
+    }, {
+        key: 'addTileLayer',
+        value: function addTileLayer() {
+            L.tileLayer(__WEBPACK_IMPORTED_MODULE_2__Config__["a" /* default */].tileLayer, {
+                maxZoom: 20,
+                minZoom: 5,
+                attribution: 'i',
+                id: 'examples.map-i875mjb7'
+            }).addTo(this.map);
+        }
+    }, {
         key: 'generateDiagram',
         value: function generateDiagram() {
             var center = this.map.getCenter();
@@ -21757,10 +21760,10 @@ var TileMap = function () {
         value: function getState() {
             var state = {};
             var minMaxXY = this.getMinMaxXY();
-            state.minX = Math.round(minMaxXY[0] - this.padding);
-            state.maxX = Math.round(minMaxXY[1] + this.padding);
-            state.minY = Math.round(minMaxXY[2] - this.padding);
-            state.maxY = Math.round(minMaxXY[3] + this.padding);
+            state.minX = Math.round(minMaxXY[0] - __WEBPACK_IMPORTED_MODULE_2__Config__["a" /* default */].padding);
+            state.maxX = Math.round(minMaxXY[1] + __WEBPACK_IMPORTED_MODULE_2__Config__["a" /* default */].padding);
+            state.minY = Math.round(minMaxXY[2] - __WEBPACK_IMPORTED_MODULE_2__Config__["a" /* default */].padding);
+            state.maxY = Math.round(minMaxXY[3] + __WEBPACK_IMPORTED_MODULE_2__Config__["a" /* default */].padding);
             var bounds = this.map.getBounds();
             state.minLat = bounds.getSouth();
             state.minLng = bounds.getWest();
@@ -22063,8 +22066,9 @@ var Point = function () {
     d: 50,
     offset: 0.85,
     padding: 10,
-    startPoint: [59.3294, 18.0686],
-    startZoom: 16
+    startPoint: [56.047203, 12.694523],
+    startZoom: 16,
+    tileLayer: 'https://api.mapbox.com/v4/mapbox.pencil/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoianVyaXNvbyIsImEiOiIzOTlkMDYxZTI1MGVmNGMxMTQ4OTVjNDE3N2I4ZWFmYiJ9.IRWCUNP1235EmbzVBhpCqw'
 });
 
 /***/ })

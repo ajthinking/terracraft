@@ -5,21 +5,17 @@ import Config from './Config'
 export default class TileMap {
     constructor() {
         this.points = [];
-        this.padding = 10;
-        this.map = L.map('map',{zoomControl:false}).setView([59.3294,18.0686], 16);
+        this.map = L.map('map',{zoomControl:false}).setView(Config.startPoint, Config.startZoom);
         this.state = this.getState()
+        this.addTileLayer()
+        this.addEvents()
+        this.load()   
+        this.state.diagram = this.generateDiagram();
+    }
 
-        L.tileLayer('https://api.mapbox.com/v4/mapbox.pencil/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoianVyaXNvbyIsImEiOiIzOTlkMDYxZTI1MGVmNGMxMTQ4OTVjNDE3N2I4ZWFmYiJ9.IRWCUNP1235EmbzVBhpCqw', {
-            maxZoom: 20,
-            minZoom:5,
-            attribution: 'i',
-            id: 'examples.map-i875mjb7',
-        }).addTo(this.map);
-
-        // EVENTS
+    addEvents() {
         this.loadedEvent = jQuery.Event("loaded");
         $("body").bind("loaded", this.drawDiagram.bind(this));
-
 
         this.map.on('zoom', function () {
             this.lastZoom = this.map.getZoom();
@@ -31,7 +27,7 @@ export default class TileMap {
              var xyCenter = Geometry.latLngToXY(center);
              var xCenter = xyCenter[0];
              var yCenter = xyCenter[1];
-             if(Math.abs(xCenter-this.xLastCenter) > this.padding/2 || Math.abs(yCenter-this.yLastCenter) > this.padding/2 || this.lastZoom != this.map.getZoom()) {
+             if(Math.abs(xCenter-this.xLastCenter) > Config.padding/2 || Math.abs(yCenter-this.yLastCenter) > Config.padding/2 || this.lastZoom != this.map.getZoom()) {
                  if(this.map.getZoom() > 15) {  
                      this.state = this.getState();                     
                      this.state.diagram = this.generateDiagram();
@@ -42,9 +38,15 @@ export default class TileMap {
                  }
              }
          }.bind(this));
+    }
 
-         this.load();    
-         this.state.diagram = this.generateDiagram();
+    addTileLayer() {
+        L.tileLayer(Config.tileLayer, {
+            maxZoom: 20,
+            minZoom:5,
+            attribution: 'i',
+            id: 'examples.map-i875mjb7',
+        }).addTo(this.map);
     }
 
     generateDiagram() {
@@ -70,10 +72,10 @@ export default class TileMap {
     getState() {
         var state = {}
         var minMaxXY = this.getMinMaxXY();
-        state.minX = Math.round(minMaxXY[0]-this.padding);
-        state.maxX = Math.round(minMaxXY[1]+this.padding);
-        state.minY = Math.round(minMaxXY[2]-this.padding);
-        state.maxY = Math.round(minMaxXY[3]+this.padding);
+        state.minX = Math.round(minMaxXY[0]-Config.padding);
+        state.maxX = Math.round(minMaxXY[1]+Config.padding);
+        state.minY = Math.round(minMaxXY[2]-Config.padding);
+        state.maxY = Math.round(minMaxXY[3]+Config.padding);
         var bounds = this.map.getBounds();
         state.minLat = bounds.getSouth();
         state.minLng = bounds.getWest();
