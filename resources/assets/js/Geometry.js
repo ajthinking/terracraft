@@ -3,10 +3,8 @@ import Config from './Config'
 export default class Geometry {
     
     static latLngToXY(p) {
-        var dLat = 1/111111;
-        var dLng = 1/(111111*Geometry.cos(p.lat));
-        var x = p.lng/(this.Config.d*dLng);
-        var y = p.lat/(this.Config.d*dLat);
+        var x = p.lng/(this.Config.d*Geometry.dLng(p.lat));
+        var y = p.lat/(this.Config.d*Geometry.dLat());
         return [x,y];
     }
 
@@ -15,24 +13,28 @@ export default class Geometry {
     }
 
     static latLngToXY(p) {
-        var dLat = 1/111111;
-        var dLng = 1/(111111*Geometry.cos(p.lat));
-        var x = p.lng/(Config.d*dLng);
-        var y = p.lat/(Config.d*dLat);
+        var x = p.lng/(Config.d*Geometry.dLng(p.lat));
+        var y = p.lat/(Config.d*Geometry.dLat());
         return [x,y];
     }
 
     static dLngFromY(y) {
-        var dLat = 1/111111;
-        var lat = y*dLat*Config.d;
+        var lat = y*Geometry.dLat()*Config.d;
         return 1/(111111*Geometry.cos(lat));
     }
     
     static XYtoLatLng(x,y) {
-        var dLat = 1/111111;
-        var lat = y*(Config.d*dLat);
-        var dLng  = 1/(111111*Geometry.cos(lat));
-        var lng = x*Config.d*dLng;
+        var lat = y*(Config.d*Geometry.dLat());
+        var lng = x*Config.d*Geometry.dLng(lat);
         return L.latLng(lat,lng);
     }
+
+    static dLat() {
+        return 1/(111111);
+    }
+
+    static dLng(lat) {
+        return 1/(111111*Geometry.cos(lat));
+    }
+    
 }

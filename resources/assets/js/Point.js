@@ -17,8 +17,8 @@ export default class Point {
         var vLatLng = Geometry.XYtoLatLng(this.vX,this.vY);
         this.vLat = vLatLng.lat;
         this.vLng = vLatLng.lng;
-        this.dLat = 1/(111111);
-        this.dLng = 1/(111111*Geometry.cos(this.vLat));
+        this.dLat = Geometry.dLat();
+        this.dLng = Geometry.dLng(this.vLat);
         return this;
     }
 

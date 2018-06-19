@@ -792,10 +792,8 @@ var Geometry = function () {
     _createClass(Geometry, null, [{
         key: 'latLngToXY',
         value: function latLngToXY(p) {
-            var dLat = 1 / 111111;
-            var dLng = 1 / (111111 * Geometry.cos(p.lat));
-            var x = p.lng / (this.Config.d * dLng);
-            var y = p.lat / (this.Config.d * dLat);
+            var x = p.lng / (this.Config.d * Geometry.dLng(p.lat));
+            var y = p.lat / (this.Config.d * Geometry.dLat());
             return [x, y];
         }
     }, {
@@ -806,27 +804,32 @@ var Geometry = function () {
     }, {
         key: 'latLngToXY',
         value: function latLngToXY(p) {
-            var dLat = 1 / 111111;
-            var dLng = 1 / (111111 * Geometry.cos(p.lat));
-            var x = p.lng / (__WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d * dLng);
-            var y = p.lat / (__WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d * dLat);
+            var x = p.lng / (__WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d * Geometry.dLng(p.lat));
+            var y = p.lat / (__WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d * Geometry.dLat());
             return [x, y];
         }
     }, {
         key: 'dLngFromY',
         value: function dLngFromY(y) {
-            var dLat = 1 / 111111;
-            var lat = y * dLat * __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d;
+            var lat = y * Geometry.dLat() * __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d;
             return 1 / (111111 * Geometry.cos(lat));
         }
     }, {
         key: 'XYtoLatLng',
         value: function XYtoLatLng(x, y) {
-            var dLat = 1 / 111111;
-            var lat = y * (__WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d * dLat);
-            var dLng = 1 / (111111 * Geometry.cos(lat));
-            var lng = x * __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d * dLng;
+            var lat = y * (__WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d * Geometry.dLat());
+            var lng = x * __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d * Geometry.dLng(lat);
             return L.latLng(lat, lng);
+        }
+    }, {
+        key: 'dLat',
+        value: function dLat() {
+            return 1 / 111111;
+        }
+    }, {
+        key: 'dLng',
+        value: function dLng(lat) {
+            return 1 / (111111 * Geometry.cos(lat));
         }
     }]);
 
@@ -22030,8 +22033,8 @@ var Point = function () {
         var vLatLng = __WEBPACK_IMPORTED_MODULE_1__Geometry__["a" /* default */].XYtoLatLng(this.vX, this.vY);
         this.vLat = vLatLng.lat;
         this.vLng = vLatLng.lng;
-        this.dLat = 1 / 111111;
-        this.dLng = 1 / (111111 * __WEBPACK_IMPORTED_MODULE_1__Geometry__["a" /* default */].cos(this.vLat));
+        this.dLat = __WEBPACK_IMPORTED_MODULE_1__Geometry__["a" /* default */].dLat();
+        this.dLng = __WEBPACK_IMPORTED_MODULE_1__Geometry__["a" /* default */].dLng(this.vLat);
         return this;
     }
 
