@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ 	return __webpack_require__(__webpack_require__.s = 11);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -70,8 +70,8 @@
 "use strict";
 
 
-var bind = __webpack_require__(3);
-var isBuffer = __webpack_require__(17);
+var bind = __webpack_require__(5);
+var isBuffer = __webpack_require__(19);
 
 /*global toString:true*/
 
@@ -375,13 +375,30 @@ module.exports = {
 
 /***/ }),
 /* 1 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ __webpack_exports__["a"] = ({
+    d: 50,
+    offset: 0.85,
+    padding: 10,
+    startPoint: [56.047203, 12.694523],
+    startZoom: 20,
+    minZoom: 15,
+    maxZoom: 22,
+    drawDiagramUntilZoom: 14,
+    tileLayer: 'https://api.mapbox.com/v4/mapbox.pencil/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoianVyaXNvbyIsImEiOiIzOTlkMDYxZTI1MGVmNGMxMTQ4OTVjNDE3N2I4ZWFmYiJ9.IRWCUNP1235EmbzVBhpCqw'
+});
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(0);
-var normalizeHeaderName = __webpack_require__(20);
+var normalizeHeaderName = __webpack_require__(22);
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -397,10 +414,10 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(4);
+    adapter = __webpack_require__(6);
   } else if (typeof process !== 'undefined') {
     // For node use HTTP adapter
-    adapter = __webpack_require__(4);
+    adapter = __webpack_require__(6);
   }
   return adapter;
 }
@@ -475,10 +492,76 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = defaults;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(19)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(21)))
 
 /***/ }),
-/* 2 */
+/* 3 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Config__ = __webpack_require__(1);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+
+
+var Geometry = function () {
+    function Geometry() {
+        _classCallCheck(this, Geometry);
+    }
+
+    _createClass(Geometry, null, [{
+        key: 'latLngToXY',
+        value: function latLngToXY(p) {
+            var x = p.lng / (this.Config.d * Geometry.dLng(p.lat));
+            var y = p.lat / (this.Config.d * Geometry.dLat());
+            return [x, y];
+        }
+    }, {
+        key: 'cos',
+        value: function cos(a) {
+            return Math.cos(a * Math.PI / 180);
+        }
+    }, {
+        key: 'latLngToXY',
+        value: function latLngToXY(p) {
+            var x = p.lng / (__WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d * Geometry.dLng(p.lat));
+            var y = p.lat / (__WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d * Geometry.dLat());
+            return [x, y];
+        }
+    }, {
+        key: 'dLngFromY',
+        value: function dLngFromY(y) {
+            var lat = y * Geometry.dLat() * __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d;
+            return 1 / (111111 * Geometry.cos(lat));
+        }
+    }, {
+        key: 'XYtoLatLng',
+        value: function XYtoLatLng(x, y) {
+            var lat = y * (__WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d * Geometry.dLat());
+            var lng = x * __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d * Geometry.dLng(lat);
+            return L.latLng(lat, lng);
+        }
+    }, {
+        key: 'dLat',
+        value: function dLat() {
+            return 1 / 111111;
+        }
+    }, {
+        key: 'dLng',
+        value: function dLng(lat) {
+            return 1 / (111111 * Geometry.cos(lat));
+        }
+    }]);
+
+    return Geometry;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (Geometry);
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports) {
 
 var g;
@@ -505,7 +588,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 3 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -523,19 +606,19 @@ module.exports = function bind(fn, thisArg) {
 
 
 /***/ }),
-/* 4 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(0);
-var settle = __webpack_require__(21);
-var buildURL = __webpack_require__(23);
-var parseHeaders = __webpack_require__(24);
-var isURLSameOrigin = __webpack_require__(25);
-var createError = __webpack_require__(5);
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(26);
+var settle = __webpack_require__(23);
+var buildURL = __webpack_require__(25);
+var parseHeaders = __webpack_require__(26);
+var isURLSameOrigin = __webpack_require__(27);
+var createError = __webpack_require__(7);
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(28);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -632,7 +715,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(27);
+      var cookies = __webpack_require__(29);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -710,13 +793,13 @@ module.exports = function xhrAdapter(config) {
 
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var enhanceError = __webpack_require__(22);
+var enhanceError = __webpack_require__(24);
 
 /**
  * Create an Error with the specified message, config, error code, request and response.
@@ -735,7 +818,7 @@ module.exports = function createError(message, config, code, request, response) 
 
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -747,7 +830,7 @@ module.exports = function isCancel(value) {
 
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -773,87 +856,72 @@ module.exports = Cancel;
 
 
 /***/ }),
-/* 8 */
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Config__ = __webpack_require__(42);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Config__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Geometry__ = __webpack_require__(3);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 
 
-var Geometry = function () {
-    function Geometry() {
-        _classCallCheck(this, Geometry);
+
+var Point = function () {
+    function Point(x, y) {
+        _classCallCheck(this, Point);
+
+        this.x = x;
+        this.y = y;
+        this.id = Point.XYtoId(x, y);
+        var latLng = __WEBPACK_IMPORTED_MODULE_1__Geometry__["a" /* default */].XYtoLatLng(x, y);
+        this.lat = latLng.lat;
+        this.lng = latLng.lng;
+        Math.seedrandom(this.id);
+        this.xRandNbr = Math.random();
+        this.yRandNbr = Math.random();
+        this.vX = this.x + this.xRandNbr * __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].offset;
+        this.vY = this.y + this.yRandNbr * __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].offset;
+        var vLatLng = __WEBPACK_IMPORTED_MODULE_1__Geometry__["a" /* default */].XYtoLatLng(this.vX, this.vY);
+        this.vLat = vLatLng.lat;
+        this.vLng = vLatLng.lng;
+        this.dLat = __WEBPACK_IMPORTED_MODULE_1__Geometry__["a" /* default */].dLat();
+        this.dLng = __WEBPACK_IMPORTED_MODULE_1__Geometry__["a" /* default */].dLng(this.vLat);
+        return this;
     }
 
-    _createClass(Geometry, null, [{
-        key: 'latLngToXY',
-        value: function latLngToXY(p) {
-            var x = p.lng / (this.Config.d * Geometry.dLng(p.lat));
-            var y = p.lat / (this.Config.d * Geometry.dLat());
-            return [x, y];
-        }
-    }, {
-        key: 'cos',
-        value: function cos(a) {
-            return Math.cos(a * Math.PI / 180);
-        }
-    }, {
-        key: 'latLngToXY',
-        value: function latLngToXY(p) {
-            var x = p.lng / (__WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d * Geometry.dLng(p.lat));
-            var y = p.lat / (__WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d * Geometry.dLat());
-            return [x, y];
-        }
-    }, {
-        key: 'dLngFromY',
-        value: function dLngFromY(y) {
-            var lat = y * Geometry.dLat() * __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d;
-            return 1 / (111111 * Geometry.cos(lat));
-        }
-    }, {
-        key: 'XYtoLatLng',
-        value: function XYtoLatLng(x, y) {
-            var lat = y * (__WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d * Geometry.dLat());
-            var lng = x * __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d * Geometry.dLng(lat);
-            return L.latLng(lat, lng);
-        }
-    }, {
-        key: 'dLat',
-        value: function dLat() {
-            return 1 / 111111;
-        }
-    }, {
-        key: 'dLng',
-        value: function dLng(lat) {
-            return 1 / (111111 * Geometry.cos(lat));
+    _createClass(Point, null, [{
+        key: 'XYtoId',
+        value: function XYtoId(x, y) {
+            return y + x * 10000000;
         }
     }]);
 
-    return Geometry;
+    return Point;
 }();
 
-/* harmony default export */ __webpack_exports__["a"] = (Geometry);
+/* harmony default export */ __webpack_exports__["a"] = (Point);
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(10);
-module.exports = __webpack_require__(37);
+__webpack_require__(12);
+module.exports = __webpack_require__(39);
 
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__TileMap__ = __webpack_require__(35);
-__webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__TileMap__ = __webpack_require__(37);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Config__ = __webpack_require__(1);
+__webpack_require__(13);
+
 
 
 $(document).ready(function () {
@@ -861,12 +929,12 @@ $(document).ready(function () {
 });
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-window._ = __webpack_require__(12);
-window.Popper = __webpack_require__(14).default;
+window._ = __webpack_require__(14);
+window.Popper = __webpack_require__(16).default;
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -888,7 +956,7 @@ try {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = __webpack_require__(15);
+window.axios = __webpack_require__(17);
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -924,7 +992,7 @@ if (token) {
 // });
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -18034,10 +18102,10 @@ if (token) {
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2), __webpack_require__(13)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(15)(module)))
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -18065,7 +18133,7 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -20591,25 +20659,25 @@ Popper.Defaults = Defaults;
 /* harmony default export */ __webpack_exports__["default"] = (Popper);
 //# sourceMappingURL=popper.js.map
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(4)))
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(16);
+module.exports = __webpack_require__(18);
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(0);
-var bind = __webpack_require__(3);
-var Axios = __webpack_require__(18);
-var defaults = __webpack_require__(1);
+var bind = __webpack_require__(5);
+var Axios = __webpack_require__(20);
+var defaults = __webpack_require__(2);
 
 /**
  * Create an instance of Axios
@@ -20642,15 +20710,15 @@ axios.create = function create(instanceConfig) {
 };
 
 // Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(7);
-axios.CancelToken = __webpack_require__(33);
-axios.isCancel = __webpack_require__(6);
+axios.Cancel = __webpack_require__(9);
+axios.CancelToken = __webpack_require__(35);
+axios.isCancel = __webpack_require__(8);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(34);
+axios.spread = __webpack_require__(36);
 
 module.exports = axios;
 
@@ -20659,7 +20727,7 @@ module.exports.default = axios;
 
 
 /***/ }),
-/* 17 */
+/* 19 */
 /***/ (function(module, exports) {
 
 /*!
@@ -20686,16 +20754,16 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var defaults = __webpack_require__(1);
+var defaults = __webpack_require__(2);
 var utils = __webpack_require__(0);
-var InterceptorManager = __webpack_require__(28);
-var dispatchRequest = __webpack_require__(29);
+var InterceptorManager = __webpack_require__(30);
+var dispatchRequest = __webpack_require__(31);
 
 /**
  * Create a new instance of Axios
@@ -20772,7 +20840,7 @@ module.exports = Axios;
 
 
 /***/ }),
-/* 19 */
+/* 21 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -20962,7 +21030,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 20 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20981,13 +21049,13 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ }),
-/* 21 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var createError = __webpack_require__(5);
+var createError = __webpack_require__(7);
 
 /**
  * Resolve or reject a Promise based on response status.
@@ -21014,7 +21082,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ }),
-/* 22 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21042,7 +21110,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 
 
 /***/ }),
-/* 23 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21115,7 +21183,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ }),
-/* 24 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21175,7 +21243,7 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ }),
-/* 25 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21250,7 +21318,7 @@ module.exports = (
 
 
 /***/ }),
-/* 26 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21293,7 +21361,7 @@ module.exports = btoa;
 
 
 /***/ }),
-/* 27 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21353,7 +21421,7 @@ module.exports = (
 
 
 /***/ }),
-/* 28 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21412,18 +21480,18 @@ module.exports = InterceptorManager;
 
 
 /***/ }),
-/* 29 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(0);
-var transformData = __webpack_require__(30);
-var isCancel = __webpack_require__(6);
-var defaults = __webpack_require__(1);
-var isAbsoluteURL = __webpack_require__(31);
-var combineURLs = __webpack_require__(32);
+var transformData = __webpack_require__(32);
+var isCancel = __webpack_require__(8);
+var defaults = __webpack_require__(2);
+var isAbsoluteURL = __webpack_require__(33);
+var combineURLs = __webpack_require__(34);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -21505,7 +21573,7 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ }),
-/* 30 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21532,7 +21600,7 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ }),
-/* 31 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21553,7 +21621,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ }),
-/* 32 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21574,13 +21642,13 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ }),
-/* 33 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Cancel = __webpack_require__(7);
+var Cancel = __webpack_require__(9);
 
 /**
  * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -21638,7 +21706,7 @@ module.exports = CancelToken;
 
 
 /***/ }),
-/* 34 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -21672,16 +21740,18 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 35 */
+/* 37 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Geometry__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Point__ = __webpack_require__(36);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Config__ = __webpack_require__(42);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Config__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Geometry__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Point__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__State__ = __webpack_require__(38);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 
 
 
@@ -21691,15 +21761,71 @@ var TileMap = function () {
     function TileMap() {
         _classCallCheck(this, TileMap);
 
-        this.map = L.map('map', { zoomControl: false }).setView(__WEBPACK_IMPORTED_MODULE_2__Config__["a" /* default */].startPoint, __WEBPACK_IMPORTED_MODULE_2__Config__["a" /* default */].startZoom);
-        this.state = this.getState();
-        this.addTileLayer();
+        this.map = L.map('map', { zoomControl: false }).setView(__WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].startPoint, __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].startZoom);
+        this.state = new __WEBPACK_IMPORTED_MODULE_3__State__["a" /* default */](this.map);
+        this.addBaseMap();
         this.addEvents();
         this.load();
         this.state.diagram = this.generateDiagram();
+
+        this.tilesMap = {};
+
+        this.tilesGeoJsonLayerGroup = L.geoJson(null, {
+            onEachFeature: function (feature, layer) {
+                this.tilesMap[feature.properties.id] = layer;
+                layer.bindPopup("id: " + feature.properties.id);
+            }.bind(this)
+        }).addTo(this.map);
     }
 
     _createClass(TileMap, [{
+        key: 'newTile',
+        value: function newTile(newGeoJsonTile) {
+            this.tilesGeoJsonLayerGroup.addData(newGeoJsonTile);
+        }
+    }, {
+        key: 'updateTile',
+        value: function updateTile(updatedGeoJsonTile) {
+            this.deleteFeature(updatedGeoJsonTile);
+            this.addNewTileToGeoJsonLayerGroup(updatedGeoJsonTile);
+        }
+    }, {
+        key: 'deleteTile',
+        value: function deleteTile(tileToDelete) {
+            var deletedTile = myFeaturesMap[tileToDelete.properties.id];
+            this.tilesGeoJsonLayerGroup.removeLayer(deletedTile);
+        }
+    }, {
+        key: 'geojsonSample',
+        value: function geojsonSample() {
+            return {
+                "type": "Feature",
+                "properties": {
+                    "id": 1,
+                    "name": "Coors Field",
+                    "amenity": "Baseball Stadium",
+                    "popupContent": "This is where the Rockies play!"
+                },
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [12.694523 + Math.random() * 0.005, 56.047203]
+                }
+            };
+        }
+    }, {
+        key: 'diagramToTileMap',
+        value: function diagramToTileMap() {}
+    }, {
+        key: 'addBaseMap',
+        value: function addBaseMap() {
+            L.tileLayer(__WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].tileLayer, {
+                maxZoom: __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].maxZoom,
+                minZoom: __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].minZoom,
+                attribution: 'i',
+                id: 'examples.map-i875mjb7'
+            }).addTo(this.map);
+        }
+    }, {
         key: 'addEvents',
         value: function addEvents() {
             this.loadedEvent = jQuery.Event("loaded");
@@ -21711,41 +21837,37 @@ var TileMap = function () {
 
             this.map.on('moveend', function () {
                 var center = this.map.getCenter();
-                var xyCenter = __WEBPACK_IMPORTED_MODULE_0__Geometry__["a" /* default */].latLngToXY(center);
+                var xyCenter = __WEBPACK_IMPORTED_MODULE_1__Geometry__["a" /* default */].latLngToXY(center);
                 var xCenter = xyCenter[0];
                 var yCenter = xyCenter[1];
-                if (Math.abs(xCenter - this.xLastCenter) > __WEBPACK_IMPORTED_MODULE_2__Config__["a" /* default */].padding / 2 || Math.abs(yCenter - this.yLastCenter) > __WEBPACK_IMPORTED_MODULE_2__Config__["a" /* default */].padding / 2 || this.lastZoom != this.map.getZoom()) {
-                    if (this.map.getZoom() > 15) {
-                        this.state = this.getState();
+                if (Math.abs(xCenter - this.xLastCenter) > __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].padding / 2 || Math.abs(yCenter - this.yLastCenter) > __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].padding / 2 || this.lastZoom != this.map.getZoom()) {
+                    if (this.map.getZoom() > __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].drawDiagramUntilZoom) {
+                        this.state.setViewPort();
                         this.state.diagram = this.generateDiagram();
                         this.load();
                     } else {
                         // ZOOM IN TO DRAW!
-                        this.map.removeLayer(gjLayer);
                     }
                 }
             }.bind(this));
         }
     }, {
-        key: 'addTileLayer',
-        value: function addTileLayer() {
-            L.tileLayer(__WEBPACK_IMPORTED_MODULE_2__Config__["a" /* default */].tileLayer, {
-                maxZoom: 20,
-                minZoom: 5,
-                attribution: 'i',
-                id: 'examples.map-i875mjb7'
-            }).addTo(this.map);
+        key: 'load',
+        value: function load() {
+            // Load tile data from server here
+            $("body").trigger(this.loadedEvent);
+            return;
         }
     }, {
         key: 'generateDiagram',
         value: function generateDiagram() {
             var center = this.map.getCenter();
-            var xyCenter = __WEBPACK_IMPORTED_MODULE_0__Geometry__["a" /* default */].latLngToXY(center);
+            var xyCenter = __WEBPACK_IMPORTED_MODULE_1__Geometry__["a" /* default */].latLngToXY(center);
             this.xLastCenter = xyCenter[0];
             this.yLastCenter = xyCenter[1];
             for (var x = this.state.minX; x < this.state.maxX; x++) {
                 for (var y = this.state.minY; y < this.state.maxY; y++) {
-                    var p = new __WEBPACK_IMPORTED_MODULE_1__Point__["a" /* default */](x, y); // candidate point
+                    var p = new __WEBPACK_IMPORTED_MODULE_2__Point__["a" /* default */](x, y); // candidate point
                     var dMx = (p.vLng - this.state.origo.vLng) / p.dLng;
                     var dMy = (p.vLat - this.state.origo.vLat) / p.dLat;
                     this.state.points.push(p);
@@ -21754,69 +21876,12 @@ var TileMap = function () {
             }
             var bbox = { xl: -1000, xr: 10000, yt: -1000, yb: 10000 };
             var voronoi = new Voronoi();
-            var diagram = voronoi.compute(this.state.sites, bbox);
-            return diagram;
-        }
-    }, {
-        key: 'getState',
-        value: function getState() {
-            var state = {};
-            var minMaxXY = this.getMinMaxXY();
-            state.minX = Math.round(minMaxXY[0] - __WEBPACK_IMPORTED_MODULE_2__Config__["a" /* default */].padding);
-            state.maxX = Math.round(minMaxXY[1] + __WEBPACK_IMPORTED_MODULE_2__Config__["a" /* default */].padding);
-            state.minY = Math.round(minMaxXY[2] - __WEBPACK_IMPORTED_MODULE_2__Config__["a" /* default */].padding);
-            state.maxY = Math.round(minMaxXY[3] + __WEBPACK_IMPORTED_MODULE_2__Config__["a" /* default */].padding);
-            var bounds = this.map.getBounds();
-            state.minLat = bounds.getSouth();
-            state.minLng = bounds.getWest();
-            state.maxLat = bounds.getNorth();
-            state.maxLng = bounds.getEast();
-            state.origo = new __WEBPACK_IMPORTED_MODULE_1__Point__["a" /* default */](state.minX, state.minY);
-            state.sites = [];
-            state.points = [];
-            state.dbPoints = new Object();
-            state.drawnEdges = [];
-
-            return state;
-        }
-    }, {
-        key: 'getMinMaxXY',
-        value: function getMinMaxXY() {
-            var bounds = this.map.getBounds();
-            var minScreen = L.latLng(bounds.getSouth(), bounds.getWest());
-            var maxScreen = L.latLng(bounds.getNorth(), bounds.getEast());
-            var minY = Math.floor(__WEBPACK_IMPORTED_MODULE_0__Geometry__["a" /* default */].latLngToXY(minScreen)[1]);
-            var maxY = Math.ceil(__WEBPACK_IMPORTED_MODULE_0__Geometry__["a" /* default */].latLngToXY(maxScreen)[1]);
-            var minX = Number.POSITIVE_INFINITY;
-            var maxX = Number.NEGATIVE_INFINITY;
-            for (var y = minY; y < maxY; y++) {
-                //get points with x inside screen.
-                var minXcandidate = bounds.getWest() / (__WEBPACK_IMPORTED_MODULE_2__Config__["a" /* default */].d * __WEBPACK_IMPORTED_MODULE_0__Geometry__["a" /* default */].dLngFromY(y));
-                var maxXcandidate = bounds.getEast() / (__WEBPACK_IMPORTED_MODULE_2__Config__["a" /* default */].d * __WEBPACK_IMPORTED_MODULE_0__Geometry__["a" /* default */].dLngFromY(y));
-                if (minXcandidate < minX) {
-                    minX = minXcandidate;
-                }
-                if (maxXcandidate > maxX) {
-                    maxX = maxXcandidate;
-                }
-            }
-            minX = Math.floor(minX);
-            maxX = Math.ceil(maxX);
-            return [minX, maxX, minY, maxY];
-        }
-    }, {
-        key: 'load',
-        value: function load() {
-            $("body").trigger(this.loadedEvent);
-            return;
+            return voronoi.compute(this.state.sites, bbox);
         }
     }, {
         key: 'drawDiagram',
         value: function drawDiagram() {
             setTimeout(function () {
-                if (this.gjLayer) {
-                    this.map.removeLayer(this.gjLayer);
-                } else {}
                 var geojsonObjects = [];
                 $.each(this.state.diagram.cells, function (indexCells, cell) {
                     if (cell.site.r > this.state.minY + 3 && cell.site.r < this.state.maxY - 3 && cell.site.c > this.state.minX + 3 && cell.site.c < this.state.maxX - 3) {
@@ -21824,15 +21889,15 @@ var TileMap = function () {
                         var polygon_points = [];
 
                         if (cell.halfedges.length > 0) {
-                            geojsonObjects.push(this.cellToGeoJSON(cell.site.voronoiId));
-                            if (cell.halfedges.length == 9) {
-                                this.drawPolygon(cell.site.voronoiId);
+                            if (this.tilesMap[cell.site.id] === undefined) {
+                                this.newTile(this.cellToGeoJSON(cell.site.voronoiId));
                             }
                         } else {
                             L.marker([cell.site.lat, cell.site.lng]).addTo(this.map);
                         }
                     }
                 }.bind(this));
+                return;
 
                 this.gjLayer = L.geoJson(geojsonObjects, {
                     style: function style(feature) {
@@ -21867,7 +21932,7 @@ var TileMap = function () {
                             alert("Clicked! Using custom callback!");
                         });
                     }
-                }).addTo(this.map);
+                }); //.addTo(this.map);
             }.bind(this), 1);
         }
     }, {
@@ -21973,15 +22038,17 @@ var TileMap = function () {
                     polygon_points.push(p);
                 }
             }
-            var pps = [];
+            var pps = []; // polygon points
             for (var i = 0; i < c.halfedges.length; i++) {
                 pps.push([polygon_points[i].lng, polygon_points[i].lat]);
             }
             pps.push([polygon_points[0].lng, polygon_points[0].lat]);
-
             var polygon = {
                 "type": "Polygon",
-                "properties": { id: c.site.id, owner: -1 },
+                "properties": {
+                    id: c.site.id,
+                    owner: -1
+                },
                 "coordinates": [pps]
             };
 
@@ -21995,12 +22062,13 @@ var TileMap = function () {
 /* harmony default export */ __webpack_exports__["a"] = (TileMap);
 
 /***/ }),
-/* 36 */
+/* 38 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Config__ = __webpack_require__(42);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Geometry__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Config__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Geometry__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Point__ = __webpack_require__(10);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -22008,64 +22076,74 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
 
-var Point = function () {
-    function Point(x, y) {
-        _classCallCheck(this, Point);
 
-        this.x = x;
-        this.y = y;
-        this.id = Point.XYtoId(x, y);
-        var latLng = __WEBPACK_IMPORTED_MODULE_1__Geometry__["a" /* default */].XYtoLatLng(x, y);
-        this.lat = latLng.lat;
-        this.lng = latLng.lng;
-        Math.seedrandom(this.id);
-        this.xRandNbr = Math.random();
-        this.yRandNbr = Math.random();
-        this.vX = this.x + this.xRandNbr * __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].offset;
-        this.vY = this.y + this.yRandNbr * __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].offset;
-        var vLatLng = __WEBPACK_IMPORTED_MODULE_1__Geometry__["a" /* default */].XYtoLatLng(this.vX, this.vY);
-        this.vLat = vLatLng.lat;
-        this.vLng = vLatLng.lng;
-        this.dLat = __WEBPACK_IMPORTED_MODULE_1__Geometry__["a" /* default */].dLat();
-        this.dLng = __WEBPACK_IMPORTED_MODULE_1__Geometry__["a" /* default */].dLng(this.vLat);
-        return this;
+var State = function () {
+    function State(map) {
+        _classCallCheck(this, State);
+
+        this.map = map;
+        this.setViewPort();
+        this.sites = [];
+        this.points = [];
     }
 
-    _createClass(Point, null, [{
-        key: 'XYtoId',
-        value: function XYtoId(x, y) {
-            return y + x * 10000000;
+    _createClass(State, [{
+        key: 'setViewPort',
+        value: function setViewPort() {
+            var minMaxXY = this.getMinMaxXY();
+            this.minX = Math.round(minMaxXY[0] - __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].padding);
+            this.maxX = Math.round(minMaxXY[1] + __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].padding);
+            this.minY = Math.round(minMaxXY[2] - __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].padding);
+            this.maxY = Math.round(minMaxXY[3] + __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].padding);
+
+            var bounds = this.map.getBounds();
+            this.minLat = bounds.getSouth();
+            this.minLng = bounds.getWest();
+            this.maxLat = bounds.getNorth();
+            this.maxLng = bounds.getEast();
+            this.origo = new __WEBPACK_IMPORTED_MODULE_2__Point__["a" /* default */](this.minX, this.minY);
+
+            // These two are to be removed?
+            this.sites = []; // basis for voronoi algorithm
+            this.points = []; // 
+        }
+    }, {
+        key: 'getMinMaxXY',
+        value: function getMinMaxXY() {
+            var bounds = this.map.getBounds();
+            var minScreen = L.latLng(bounds.getSouth(), bounds.getWest());
+            var maxScreen = L.latLng(bounds.getNorth(), bounds.getEast());
+            var minY = Math.floor(__WEBPACK_IMPORTED_MODULE_1__Geometry__["a" /* default */].latLngToXY(minScreen)[1]);
+            var maxY = Math.ceil(__WEBPACK_IMPORTED_MODULE_1__Geometry__["a" /* default */].latLngToXY(maxScreen)[1]);
+            var minX = Number.POSITIVE_INFINITY;
+            var maxX = Number.NEGATIVE_INFINITY;
+            for (var y = minY; y < maxY; y++) {
+                //get points with x inside screen.
+                var minXcandidate = bounds.getWest() / (__WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d * __WEBPACK_IMPORTED_MODULE_1__Geometry__["a" /* default */].dLngFromY(y));
+                var maxXcandidate = bounds.getEast() / (__WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d * __WEBPACK_IMPORTED_MODULE_1__Geometry__["a" /* default */].dLngFromY(y));
+                if (minXcandidate < minX) {
+                    minX = minXcandidate;
+                }
+                if (maxXcandidate > maxX) {
+                    maxX = maxXcandidate;
+                }
+            }
+            minX = Math.floor(minX);
+            maxX = Math.ceil(maxX);
+            return [minX, maxX, minY, maxY];
         }
     }]);
 
-    return Point;
+    return State;
 }();
 
-/* harmony default export */ __webpack_exports__["a"] = (Point);
+/* harmony default export */ __webpack_exports__["a"] = (State);
 
 /***/ }),
-/* 37 */
+/* 39 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 38 */,
-/* 39 */,
-/* 40 */,
-/* 41 */,
-/* 42 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony default export */ __webpack_exports__["a"] = ({
-    d: 50,
-    offset: 0.85,
-    padding: 10,
-    startPoint: [56.047203, 12.694523],
-    startZoom: 16,
-    tileLayer: 'https://api.mapbox.com/v4/mapbox.pencil/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoianVyaXNvbyIsImEiOiIzOTlkMDYxZTI1MGVmNGMxMTQ4OTVjNDE3N2I4ZWFmYiJ9.IRWCUNP1235EmbzVBhpCqw'
-});
 
 /***/ })
 /******/ ]);

@@ -1,15 +1,68 @@
+import Config from './Config'
 import Geometry from './Geometry'
 import Point from './Point'
-import Config from './Config'
+import State from './State'
 
 export default class TileMap {
     constructor() {
         this.map = L.map('map',{zoomControl:false}).setView(Config.startPoint, Config.startZoom);
-        this.state = this.getState()
-        this.addTileLayer()
+        this.state = new State(this.map);
+        this.addBaseMap()
         this.addEvents()
         this.load()   
         this.state.diagram = this.generateDiagram();
+
+        this.tilesMap = {};
+        
+        this.tilesGeoJsonLayerGroup = L.geoJson(null,{
+            onEachFeature: function (feature, layer) {
+                this.tilesMap[feature.properties.id] = layer;
+                layer.bindPopup("id: " + feature.properties.id);
+            }.bind(this)
+        }).addTo(this.map);        
+    }
+
+    newTile(newGeoJsonTile) {
+        this.tilesGeoJsonLayerGroup.addData(newGeoJsonTile);
+    }
+    
+    updateTile(updatedGeoJsonTile) {
+        this.deleteFeature(updatedGeoJsonTile);
+        this.addNewTileToGeoJsonLayerGroup(updatedGeoJsonTile);
+    }
+    
+    deleteTile(tileToDelete) {
+        var deletedTile = myFeaturesMap[tileToDelete.properties.id];
+        this.tilesGeoJsonLayerGroup.removeLayer(deletedTile);
+    }
+    
+    geojsonSample() {
+        return {
+            "type": "Feature",
+            "properties": {
+                "id": 1,
+                "name": "Coors Field",
+                "amenity": "Baseball Stadium",
+                "popupContent": "This is where the Rockies play!"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [12.694523+Math.random()*0.005, 56.047203]
+            }
+        };
+    }
+
+    diagramToTileMap() {
+
+    }
+
+    addBaseMap() {
+        L.tileLayer(Config.tileLayer, {
+            maxZoom: Config.maxZoom,
+            minZoom: Config.minZoom,
+            attribution: 'i',
+            id: 'examples.map-i875mjb7',
+        }).addTo(this.map);
     }
 
     addEvents() {
@@ -27,25 +80,21 @@ export default class TileMap {
              var xCenter = xyCenter[0];
              var yCenter = xyCenter[1];
              if(Math.abs(xCenter-this.xLastCenter) > Config.padding/2 || Math.abs(yCenter-this.yLastCenter) > Config.padding/2 || this.lastZoom != this.map.getZoom()) {
-                 if(this.map.getZoom() > 15) {  
-                     this.state = this.getState();                     
+                 if(this.map.getZoom() > Config.drawDiagramUntilZoom) {  
+                     this.state.setViewPort();                     
                      this.state.diagram = this.generateDiagram();
                      this.load();
                  } else {
                      // ZOOM IN TO DRAW!
-                     this.map.removeLayer(gjLayer);
                  }
              }
          }.bind(this));
     }
 
-    addTileLayer() {
-        L.tileLayer(Config.tileLayer, {
-            maxZoom: 20,
-            minZoom:5,
-            attribution: 'i',
-            id: 'examples.map-i875mjb7',
-        }).addTo(this.map);
+    load() {
+        // Load tile data from server here
+        $("body").trigger(this.loadedEvent);
+        return;
     }
 
     generateDiagram() {
@@ -53,7 +102,7 @@ export default class TileMap {
         var xyCenter = Geometry.latLngToXY(center);
         this.xLastCenter = xyCenter[0];
         this.yLastCenter = xyCenter[1];
-       for(var x=this.state.minX; x<this.state.maxX; x++) {
+        for(var x=this.state.minX; x<this.state.maxX; x++) {
             for(var y=this.state.minY; y<this.state.maxY; y++) {
                 var p = new Point(x,y); // candidate point
                 var dMx = (p.vLng - this.state.origo.vLng)/p.dLng;
@@ -64,83 +113,28 @@ export default class TileMap {
         }
         var bbox = {xl: -1000, xr: 10000, yt: -1000, yb: 10000};
         var voronoi = new Voronoi();
-        var diagram = voronoi.compute(this.state.sites, bbox);
-        return diagram;
-    }
-    
-    getState() {
-        var state = {}
-        var minMaxXY = this.getMinMaxXY();
-        state.minX = Math.round(minMaxXY[0]-Config.padding);
-        state.maxX = Math.round(minMaxXY[1]+Config.padding);
-        state.minY = Math.round(minMaxXY[2]-Config.padding);
-        state.maxY = Math.round(minMaxXY[3]+Config.padding);
-        var bounds = this.map.getBounds();
-        state.minLat = bounds.getSouth();
-        state.minLng = bounds.getWest();
-        state.maxLat = bounds.getNorth();
-        state.maxLng = bounds.getEast();
-        state.origo = new Point(state.minX,state.minY);
-        state.sites = [];
-        state.points = [];
-        state.dbPoints = new Object();    
-        state.drawnEdges = [];
-
-        return state;
-    }
-
-    getMinMaxXY() {
-        var bounds = this.map.getBounds();
-        var minScreen = L.latLng(bounds.getSouth(), bounds.getWest());
-        var maxScreen = L.latLng(bounds.getNorth(), bounds.getEast());
-        var minY = Math.floor(Geometry.latLngToXY(minScreen)[1]);
-        var maxY = Math.ceil(Geometry.latLngToXY(maxScreen)[1]);
-        var minX = Number.POSITIVE_INFINITY;
-        var maxX = Number.NEGATIVE_INFINITY;
-        for(var y = minY; y<maxY; y++) {
-            //get points with x inside screen.
-            var minXcandidate = bounds.getWest()/(Config.d*Geometry.dLngFromY(y));
-            var maxXcandidate = bounds.getEast()/(Config.d*Geometry.dLngFromY(y));
-            if(minXcandidate < minX) {
-                minX = minXcandidate;
-            }
-            if(maxXcandidate > maxX) {
-                maxX = maxXcandidate;
-            }
-        }
-        minX = Math.floor(minX);
-        maxX = Math.ceil(maxX);
-        return [minX,maxX,minY,maxY];
-    }
-    
-    load() {
-        $("body").trigger(this.loadedEvent);
-        return;
+        return voronoi.compute(this.state.sites, bbox);
     }
 
     drawDiagram() {    
         setTimeout(function() {
-            if(this.gjLayer) {
-                this.map.removeLayer(this.gjLayer);
-            } else {
-            }
             var geojsonObjects = [];
             $.each(this.state.diagram.cells, function(indexCells, cell) {
-                if(cell.site.r >  this.state.minY +3 && cell.site.r <  this.state.maxY -3 && cell.site.c >  this.state.minX +3 && cell.site.c <  this.state.maxX -3) {
+                if(cell.site.r > this.state.minY +3 && cell.site.r < this.state.maxY -3 && cell.site.c > this.state.minX +3 && cell.site.c < this.state.maxX -3) {
                     var point = this.state.points[indexCells];
                     var polygon_points = [];
                     
                     if(cell.halfedges.length > 0) {
-                        geojsonObjects.push(this.cellToGeoJSON(cell.site.voronoiId));
-                        if(cell.halfedges.length == 9) {
-                            this.drawPolygon(cell.site.voronoiId);
+                        if(this.tilesMap[cell.site.id] === undefined) {
+                            this.newTile(this.cellToGeoJSON(cell.site.voronoiId));
                         }
                     } else {
                         L.marker([cell.site.lat, cell.site.lng]).addTo(this.map);
                     }
                 }
             }.bind(this));
-    
+            return;
+
             this.gjLayer = L.geoJson(geojsonObjects, {
                 style: function(feature) {
     
@@ -158,13 +152,13 @@ export default class TileMap {
                     }
     
                     var myStyle = {
-                                color: "darkgreen",
-                                fillColor: fillColor,
-                                weight: 1.5,
-                                fill: fill,
-                                opacity: 1.0,
-                                fillOpacity: 0.25,
-                                smoothFactor: 0
+                        color: "darkgreen",
+                        fillColor: fillColor,
+                        weight: 1.5,
+                        fill: fill,
+                        opacity: 1.0,
+                        fillOpacity: 0.25,
+                        smoothFactor: 0
                     };
                     return myStyle;
                 },
@@ -174,7 +168,7 @@ export default class TileMap {
                         alert("Clicked! Using custom callback!");
                     });
                 }
-            }).addTo(this.map);
+            }) //.addTo(this.map);
         }.bind(this), 1);        
     }
 
@@ -281,15 +275,17 @@ export default class TileMap {
             }
     
         }
-        var pps = [];
+        var pps = []; // polygon points
         for(var i=0; i<c.halfedges.length; i++) {
             pps.push([polygon_points[i].lng,polygon_points[i].lat]);
         }
         pps.push([polygon_points[0].lng,polygon_points[0].lat]);
-    
         var polygon = {
             "type": "Polygon",
-            "properties": {id: c.site.id, owner: -1},
+            "properties": {
+                id: c.site.id,
+                owner: -1
+            },
             "coordinates": [pps]
         };
     

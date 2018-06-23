@@ -19,6 +19,8 @@
 </head>
 <body>
 	<div id="map"></div>
+	<button onClick="addData">Add</button>
+	<button onClick="deleteData">Delete</button>
 	<script src="js/app.js"></script>    
 </body>
 </html>
