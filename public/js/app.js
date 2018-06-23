@@ -21773,8 +21773,35 @@ var TileMap = function () {
         this.tilesGeoJsonLayerGroup = L.geoJson(null, {
             onEachFeature: function (feature, layer) {
                 this.tilesMap[feature.properties.id] = layer;
-                layer.bindPopup("id: " + feature.properties.id);
-            }.bind(this)
+                layer.on('click', function () {
+                    feature.properties.owner = "taken";
+                    this.updateTile(feature);
+                }.bind(this, feature));
+            }.bind(this),
+            style: function style(feature) {
+                var fill = true;
+                var owner = feature.geometry.properties.owner;
+                if (owner == "taken") {
+                    var fill = true;
+                    var fillColor = "green";
+                    var fillOpacity = 0.75;
+                } else {
+                    var fill = true;
+                    var fillColor = "black";
+                    var fillOpacity = 0.25;
+                }
+
+                var myStyle = {
+                    color: "darkgreen",
+                    fillColor: fillColor,
+                    weight: 1.5,
+                    fill: fill,
+                    opacity: 1.0,
+                    fillOpacity: fillOpacity,
+                    smoothFactor: 0
+                };
+                return myStyle;
+            }
         }).addTo(this.map);
     }
 
@@ -21786,35 +21813,15 @@ var TileMap = function () {
     }, {
         key: 'updateTile',
         value: function updateTile(updatedGeoJsonTile) {
-            this.deleteFeature(updatedGeoJsonTile);
-            this.addNewTileToGeoJsonLayerGroup(updatedGeoJsonTile);
+            this.deleteTile(updatedGeoJsonTile);
+            this.newTile(updatedGeoJsonTile);
         }
     }, {
         key: 'deleteTile',
         value: function deleteTile(tileToDelete) {
-            var deletedTile = myFeaturesMap[tileToDelete.properties.id];
+            var deletedTile = this.tilesMap[tileToDelete.properties.id];
             this.tilesGeoJsonLayerGroup.removeLayer(deletedTile);
         }
-    }, {
-        key: 'geojsonSample',
-        value: function geojsonSample() {
-            return {
-                "type": "Feature",
-                "properties": {
-                    "id": 1,
-                    "name": "Coors Field",
-                    "amenity": "Baseball Stadium",
-                    "popupContent": "This is where the Rockies play!"
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [12.694523 + Math.random() * 0.005, 56.047203]
-                }
-            };
-        }
-    }, {
-        key: 'diagramToTileMap',
-        value: function diagramToTileMap() {}
     }, {
         key: 'addBaseMap',
         value: function addBaseMap() {
