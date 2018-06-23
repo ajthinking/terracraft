@@ -18,9 +18,24 @@
     <link rel="stylesheet" href="css/app.css" />
 </head>
 <body>
+	<div id="header">
+		<span>goldcoins: </span>
+		<span id="gc">101932413</span>
+		<span>
+			23 acres
+		</span>
+		<span>
+			1154 workers
+		</span>  
+	</div>
 	<div id="map"></div>
-	<button onClick="addData">Add</button>
-	<button onClick="deleteData">Delete</button>
-	<script src="js/app.js"></script>    
+	<div id="footer">
+		<span>Map</span>
+		<span>Throne</span>  
+		<span>Hall of Fame</span>
+		<span>The paper</span>
+	</div>	    
+
+	<script src="js/app.js"></script>
 </body>
 </html>
