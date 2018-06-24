@@ -2,6 +2,7 @@ import Config from './Config'
 import Geometry from './Geometry'
 import Point from './Point'
 import State from './State'
+import Style from './Style'
 
 export default class TileMap {
     constructor() {
@@ -12,7 +13,6 @@ export default class TileMap {
             })
         }).setView(Config.startPoint, Config.startZoom);
 
-        console.log(this.map)
         this.state = new State(this.map);
         this.addBaseMap()
         this.addEvents()
@@ -30,28 +30,11 @@ export default class TileMap {
                 }.bind(this, feature));                
             }.bind(this),
             style: function(feature) {
-                var fill = true;
-                var owner = feature.geometry.properties.owner;
-                if(owner == "taken") {
-                    var fill = true;
-                    var fillColor = "green";
-                    var fillOpacity = 0.75;
+                if(feature.geometry.properties.owner == "taken") {
+                    return Style.ownTile()
                 } else {
-                    var fill = true;
-                    var fillColor = "black";
-                    var fillOpacity = 0.25;
+                    return Style.gridOnly()
                 }
-
-                var myStyle = {
-                    color: "darkgreen",
-                    fillColor: fillColor,
-                    weight: 1.5,
-                    fill: fill,
-                    opacity: 1.0,
-                    fillOpacity: fillOpacity,
-                    smoothFactor: 0
-                };
-                return myStyle;
             }            
         }).addTo(this.map);        
     }

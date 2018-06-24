@@ -21761,9 +21761,11 @@ module.exports = function spread(callback) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Geometry__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Point__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__State__ = __webpack_require__(38);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Style__ = __webpack_require__(48);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 
 
 
@@ -21781,7 +21783,6 @@ var TileMap = function () {
             })
         }).setView(__WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].startPoint, __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].startZoom);
 
-        console.log(this.map);
         this.state = new __WEBPACK_IMPORTED_MODULE_3__State__["a" /* default */](this.map);
         this.addBaseMap();
         this.addEvents();
@@ -21799,28 +21800,11 @@ var TileMap = function () {
                 }.bind(this, feature));
             }.bind(this),
             style: function style(feature) {
-                var fill = true;
-                var owner = feature.geometry.properties.owner;
-                if (owner == "taken") {
-                    var fill = true;
-                    var fillColor = "green";
-                    var fillOpacity = 0.75;
+                if (feature.geometry.properties.owner == "taken") {
+                    return __WEBPACK_IMPORTED_MODULE_4__Style__["a" /* default */].ownTile();
                 } else {
-                    var fill = true;
-                    var fillColor = "black";
-                    var fillOpacity = 0.25;
+                    return __WEBPACK_IMPORTED_MODULE_4__Style__["a" /* default */].gridOnly();
                 }
-
-                var myStyle = {
-                    color: "darkgreen",
-                    fillColor: fillColor,
-                    weight: 1.5,
-                    fill: fill,
-                    opacity: 1.0,
-                    fillOpacity: fillOpacity,
-                    smoothFactor: 0
-                };
-                return myStyle;
             }
         }).addTo(this.map);
     }
@@ -27709,6 +27693,57 @@ bunker(function () {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 44 */,
+/* 45 */,
+/* 46 */,
+/* 47 */,
+/* 48 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Style = function () {
+    function Style() {
+        _classCallCheck(this, Style);
+    }
+
+    _createClass(Style, null, [{
+        key: "gridOnly",
+        value: function gridOnly() {
+            return {
+                color: "black",
+                fillColor: "black",
+                weight: 1.5,
+                fill: true,
+                opacity: 0.3,
+                fillOpacity: 0.01,
+                smoothFactor: 0
+            };
+        }
+    }, {
+        key: "ownTile",
+        value: function ownTile() {
+            return {
+                color: "darkgreen",
+                fillColor: "green",
+                weight: 1.5,
+                fill: true,
+                opacity: 1.0,
+                fillOpacity: 0.75,
+                smoothFactor: 0
+            };
+        }
+    }]);
+
+    return Style;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (Style);
 
 /***/ })
 /******/ ]);
