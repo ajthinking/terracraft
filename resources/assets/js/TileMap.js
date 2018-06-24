@@ -5,7 +5,14 @@ import State from './State'
 
 export default class TileMap {
     constructor() {
-        this.map = L.map('map',{zoomControl:false}).setView(Config.startPoint, Config.startZoom);
+        this.map = L.map('map', {
+            zoomControl:false,
+            renderer: L.svg({
+                padding: 0.5
+            })
+        }).setView(Config.startPoint, Config.startZoom);
+
+        console.log(this.map)
         this.state = new State(this.map);
         this.addBaseMap()
         this.addEvents()

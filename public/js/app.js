@@ -21774,7 +21774,14 @@ var TileMap = function () {
     function TileMap() {
         _classCallCheck(this, TileMap);
 
-        this.map = L.map('map', { zoomControl: false }).setView(__WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].startPoint, __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].startZoom);
+        this.map = L.map('map', {
+            zoomControl: false,
+            renderer: L.svg({
+                padding: 0.5
+            })
+        }).setView(__WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].startPoint, __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].startZoom);
+
+        console.log(this.map);
         this.state = new __WEBPACK_IMPORTED_MODULE_3__State__["a" /* default */](this.map);
         this.addBaseMap();
         this.addEvents();
