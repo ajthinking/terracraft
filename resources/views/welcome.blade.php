@@ -25,11 +25,11 @@
 			</span>
 			<span class="header-item">
 				<i class="fas fa-dollar-sign"></i>
-				281337
+				<span id="cash">281337</span>
 			</span>
 			<span class="header-item">
 				<i class="fas fa-users"></i>
-				1024
+				<span id="pop">1024</span>
 			</span>
 			<span class="header-item">
 				<i class="fas fa-globe"></i>  
@@ -42,5 +42,15 @@
 	</div>	    
 
 	<script src="js/app.js"></script>
+
+	<script>
+		setInterval(function() {
+			$("#cash").html(parseInt($("#cash").html())+1);
+		}, 50)
+
+		setInterval(function() {
+			$("#pop").html(parseInt($("#pop").html())+1);
+		}, 5000)		
+	</script>
 </body>
 </html>
