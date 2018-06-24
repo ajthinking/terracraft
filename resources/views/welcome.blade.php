@@ -19,17 +19,22 @@
 </head>
 <body>
 	<div id="header">
-		<span class="header-item">
-			<i class="fas fa-dollar-sign"></i>
-			281337
-		</span>
-		<span class="header-item">
-			<i class="fas fa-users"></i>
-			1024
-		</span>
-		<span class="header-item">
-			<i class="fas fa-globe"></i>  
-			28
+		<span class="header-items">
+			<span class="header-item">
+				<img src="img/favicon.png" height="20" />
+			</span>
+			<span class="header-item">
+				<i class="fas fa-dollar-sign"></i>
+				281337
+			</span>
+			<span class="header-item">
+				<i class="fas fa-users"></i>
+				1024
+			</span>
+			<span class="header-item">
+				<i class="fas fa-globe"></i>  
+				28
+			</span>
 		</span>
 	</div>
 	<div id="map"></div>

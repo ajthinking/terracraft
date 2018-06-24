@@ -3,15 +3,19 @@
 }
 
 #header {
-    height: 50px;
+    height: 25px;
     width: 100%;
     background: linear-gradient(to right, $primary, darken($primary, 10%));
     color: $primary-text;
-    text-align: center;
+    line-height: 25px;
 }
 
 .header-item {
     margin-right: 20px;
+}
+
+.header-item {
+    margin-left: 20px;
 }
 
 #footer {

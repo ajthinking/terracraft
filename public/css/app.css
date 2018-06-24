@@ -4,16 +4,20 @@
 }
 
 #header {
-  height: 50px;
+  height: 25px;
   width: 100%;
   background: -webkit-gradient(linear, left top, right top, from(white), to(#e6e5e5));
   background: linear-gradient(to right, white, #e6e5e5);
   color: black;
-  text-align: center;
+  line-height: 25px;
 }
 
 .header-item {
   margin-right: 20px;
+}
+
+.header-item {
+  margin-left: 20px;
 }
 
 #footer {
@@ -39,7 +43,7 @@ body {
 }
 
 #map {
-  height: calc(100% - 100px);
+  height: calc(100% - 75px);
   width: 100%;
 }
 
