@@ -1,0 +1,26 @@
+.header-icon {
+    transform: scale(1,1);
+}
+
+#header {
+    height: 50px;
+    width: 100%;
+    background: linear-gradient(to right, $primary, darken($primary, 10%));
+    color: $primary-text;
+    text-align: center;
+}
+
+.header-item {
+    margin-right: 20px;
+}
+
+#footer {
+    position: fixed;
+    left: 0;
+    height: 50px;
+    bottom: 0;
+    width: 100%;
+    background: linear-gradient(to right, $primary, darken($primary, 10%));
+    color: $primary-text;
+    text-align: center;
+}

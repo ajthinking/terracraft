@@ -19,21 +19,21 @@
 </head>
 <body>
 	<div id="header">
-		<span>goldcoins: </span>
-		<span id="gc">101932413</span>
-		<span>
-			23 acres
+		<span class="header-item">
+			<i class="fas fa-dollar-sign"></i>
+			281337
 		</span>
-		<span>
-			1154 workers
-		</span>  
+		<span class="header-item">
+			<i class="fas fa-users"></i>
+			1024
+		</span>
+		<span class="header-item">
+			<i class="fas fa-globe"></i>  
+			28
+		</span>
 	</div>
 	<div id="map"></div>
 	<div id="footer">
-		<span>Map</span>
-		<span>Throne</span>  
-		<span>Hall of Fame</span>
-		<span>The paper</span>
 	</div>	    
 
 	<script src="js/app.js"></script>
