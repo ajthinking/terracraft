@@ -131,69 +131,6 @@ export default class TileMap {
         }.bind(this), 1);        
     }
 
-    drawPolygon(id) {  
-            var c = this.state.diagram.cells[id];
-            var point = this.state.points[id];
-            var polygon_points = [];
-        
-            var p0 = new Object();
-            var equalVa = c.halfedges[0].edge.va.x == c.halfedges[1].edge.va.x && c.halfedges[0].edge.va.y == c.halfedges[1].edge.va.y;
-            var equalVb = c.halfedges[0].edge.va.x == c.halfedges[1].edge.vb.x && c.halfedges[0].edge.va.y == c.halfedges[1].edge.vb.y;
-            if(equalVa || equalVb) {
-                p0.x = c.halfedges[0].edge.va.x;
-                p0.y = c.halfedges[0].edge.va.y;
-                p0.lat = c.halfedges[0].edge.va.y*point.dLat+this.state.origo.vLat;
-                p0.lng = c.halfedges[0].edge.va.x*point.dLng+this.state.origo.vLng;
-            } else {
-                p0.x = c.halfedges[0].edge.vb.x;
-                p0.y = c.halfedges[0].edge.vb.y;
-                p0.lat = c.halfedges[0].edge.vb.y*point.dLat+this.state.origo.vLat;
-                p0.lng = c.halfedges[0].edge.vb.x*point.dLng+this.state.origo.vLng;
-            }
-                polygon_points.push(p0);
-        
-            for(var i=1; i<c.halfedges.length; i++) {
-                if(c.halfedges[i].edge.va.x != polygon_points[i-1].x || c.halfedges[i].edge.va.y != polygon_points[i-1].y) {
-                    var p = new Object();
-                    p.x = c.halfedges[i].edge.va.x;
-                    p.y = c.halfedges[i].edge.va.y;
-                    p.lat = c.halfedges[i].edge.va.y*point.dLat+this.state.origo.vLat;
-                    p.lng = c.halfedges[i].edge.va.x*point.dLng+this.state.origo.vLng;
-                    polygon_points.push(p);
-                } else {
-                    var p = new Object();
-                    p.x = c.halfedges[i].edge.vb.x;
-                    p.y = c.halfedges[i].edge.vb.y;
-                    p.lat = c.halfedges[i].edge.vb.y*point.dLat+this.state.origo.vLat;
-                    p.lng = c.halfedges[i].edge.vb.x*point.dLng+this.state.origo.vLng;
-                    polygon_points.push(p);
-                }
-        
-            }
-            var pps = [];
-            for(var i=0; i<c.halfedges.length; i++) {
-                pps.push([polygon_points[i].lat,polygon_points[i].lng]);
-            }
-            pps.push([polygon_points[0].lat,polygon_points[0].lng]);
-            
-            var polygon = L.polygon(pps,{
-                color: "red",
-                fillColor: "red",
-                weight: 0.5,
-                fill: "red",
-                opacity: 1.0,
-                fillOpacity: 0.20,
-                smoothFactor: 0
-            });
-            
-            polygon.on('click', function(feature, layer) {
-                alert("Im clicked!");
-            });
-            
-            polygon.addTo(this.map);
-            
-    }
-
     cellToGeoJSON(id) {
         var c = this.state.diagram.cells[id];
         var point = this.state.points[id];
