@@ -57,7 +57,6 @@ export default class TileMap {
         L.tileLayer(Config.tileLayer, {
             maxZoom: Config.maxZoom,
             minZoom: Config.minZoom,
-            attribution: 'i',
             id: 'examples.map-i875mjb7',
         }).addTo(this.map);
     }
@@ -67,25 +66,24 @@ export default class TileMap {
         $("body").bind("loaded", this.drawDiagram.bind(this));
 
         this.map.on('zoom', function () {
-            this.lastZoom = this.map.getZoom();
+            this.lastZoom = this.map.getZoom();         
+        }.bind(this));
          
-         }.bind(this));
-         
-         this.map.on('moveend', function() {
-             var center = this.map.getCenter();
-             var xyCenter = Geometry.latLngToXY(center);
-             var xCenter = xyCenter[0];
-             var yCenter = xyCenter[1];
-             if(Math.abs(xCenter-this.xLastCenter) > Config.padding/2 || Math.abs(yCenter-this.yLastCenter) > Config.padding/2 || this.lastZoom != this.map.getZoom()) {
-                 if(this.map.getZoom() > Config.drawDiagramUntilZoom) {  
-                     this.state.setViewPort();                     
-                     this.state.diagram = this.generateDiagram();
-                     this.load();
-                 } else {
-                     // ZOOM IN TO DRAW!
-                 }
-             }
-         }.bind(this));
+        this.map.on('moveend', function() {
+            var center = this.map.getCenter();
+            var xyCenter = Geometry.latLngToXY(center);
+            var xCenter = xyCenter[0];
+            var yCenter = xyCenter[1];
+            if(Math.abs(xCenter-this.xLastCenter) > Config.padding/2 || Math.abs(yCenter-this.yLastCenter) > Config.padding/2 || this.lastZoom != this.map.getZoom()) {
+                if(this.map.getZoom() > Config.drawDiagramUntilZoom) {  
+                    this.state.setViewPort();                     
+                    this.state.diagram = this.generateDiagram();
+                    this.load();
+                } else {
+                    // ZOOM IN TO DRAW!
+                }
+            }
+        }.bind(this));
     }
 
     load() {
@@ -130,42 +128,6 @@ export default class TileMap {
                     }
                 }
             }.bind(this));
-            return;
-
-            this.gjLayer = L.geoJson(geojsonObjects, {
-                style: function(feature) {
-    
-                    var fill = false;
-                    var owner = feature.geometry.properties.owner;
-                    if(owner == "player.id") {
-                        var fill = true;
-                        var fillColor = "green";
-                    } else if(owner != -1) {
-                        var fill = true;
-                        var fillColor = "black";
-                    } else {
-                        var fill = false;
-                        var fillColor = "black";
-                    }
-    
-                    var myStyle = {
-                        color: "darkgreen",
-                        fillColor: fillColor,
-                        weight: 1.5,
-                        fill: fill,
-                        opacity: 1.0,
-                        fillOpacity: 0.25,
-                        smoothFactor: 0
-                    };
-                    return myStyle;
-                },
-                onEachFeature: function (feature, layer) {
-                    //layer.bindPopup("Owner: " + feature.properties.owner + "<br> Land: 52 acres" + "<br> Strength: Weak" );
-                    layer.on('click', function() {
-                        alert("Clicked! Using custom callback!");
-                    });
-                }
-            }) //.addTo(this.map);
         }.bind(this), 1);        
     }
 
@@ -287,6 +249,5 @@ export default class TileMap {
         };
     
         return polygon;
-    
     }
 }
