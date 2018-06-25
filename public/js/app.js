@@ -21863,7 +21863,7 @@ var TileMap = function () {
         }).addTo(this.map);
 
         this.map.locate({
-            setView: true,
+            setView: false,
             watch: true
         });
     }
@@ -21899,6 +21899,11 @@ var TileMap = function () {
         value: function addEvents() {
             this.loadedEvent = jQuery.Event("loaded");
             $("body").bind("loaded", this.drawDiagram.bind(this));
+            this.map.on('locationfound', function (e) {
+                if (!this.userPos) {
+                    this.setViewOnUser(e.latlng);
+                }
+            }.bind(this));
 
             this.map.on('zoom', function () {
                 this.lastZoom = this.map.getZoom();
@@ -21919,6 +21924,11 @@ var TileMap = function () {
                     }
                 }
             }.bind(this));
+        }
+    }, {
+        key: 'setViewOnUser',
+        value: function setViewOnUser(latlng) {
+            this.map.setView(latlng);
         }
     }, {
         key: 'load',

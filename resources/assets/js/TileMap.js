@@ -39,7 +39,7 @@ export default class TileMap {
         }).addTo(this.map);
         
         this.map.locate({
-            setView: true,
+            setView: false,
             watch: true
         });
     }
@@ -69,7 +69,12 @@ export default class TileMap {
     addEvents() {
         this.loadedEvent = jQuery.Event("loaded");
         $("body").bind("loaded", this.drawDiagram.bind(this));
-
+        this.map.on('locationfound', function(e) {            
+            if(!this.userPos) {
+                this.setViewOnUser(e.latlng)
+            }
+        }.bind(this));
+        
         this.map.on('zoom', function () {
             this.lastZoom = this.map.getZoom();         
         }.bind(this));
@@ -89,6 +94,10 @@ export default class TileMap {
                 }
             }
         }.bind(this));
+    }
+
+    setViewOnUser(latlng) {
+        this.map.setView(latlng)
     }
 
     load() {
