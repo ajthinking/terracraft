@@ -384,7 +384,7 @@ module.exports = {
     padding: 10,
     startPoint: [56.045003, 12.694523],
     startZoom: 18,
-    minZoom: 15,
+    minZoom: 16,
     maxZoom: 22,
     drawDiagramUntilZoom: 14,
     tileLayer: 'https://api.mapbox.com/v4/mapbox.pencil/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoianVyaXNvbyIsImEiOiIzOTlkMDYxZTI1MGVmNGMxMTQ4OTVjNDE3N2I4ZWFmYiJ9.IRWCUNP1235EmbzVBhpCqw'
@@ -502,6 +502,8 @@ module.exports = defaults;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Config__ = __webpack_require__(1);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 
@@ -512,46 +514,98 @@ var Geometry = function () {
     }
 
     _createClass(Geometry, null, [{
-        key: 'latLngToXY',
+        key: "latLngToXY",
         value: function latLngToXY(p) {
             var x = p.lng / (this.Config.d * Geometry.dLng(p.lat));
             var y = p.lat / (this.Config.d * Geometry.dLat());
             return [x, y];
         }
     }, {
-        key: 'cos',
+        key: "cos",
         value: function cos(a) {
             return Math.cos(a * Math.PI / 180);
         }
     }, {
-        key: 'latLngToXY',
+        key: "latLngToXY",
         value: function latLngToXY(p) {
             var x = p.lng / (__WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d * Geometry.dLng(p.lat));
             var y = p.lat / (__WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d * Geometry.dLat());
             return [x, y];
         }
     }, {
-        key: 'dLngFromY',
+        key: "dLngFromY",
         value: function dLngFromY(y) {
             var lat = y * Geometry.dLat() * __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d;
             return 1 / (111111 * Geometry.cos(lat));
         }
     }, {
-        key: 'XYtoLatLng',
+        key: "XYtoLatLng",
         value: function XYtoLatLng(x, y) {
             var lat = y * (__WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d * Geometry.dLat());
             var lng = x * __WEBPACK_IMPORTED_MODULE_0__Config__["a" /* default */].d * Geometry.dLng(lat);
             return L.latLng(lat, lng);
         }
     }, {
-        key: 'dLat',
+        key: "dLat",
         value: function dLat() {
             return 1 / 111111;
         }
     }, {
-        key: 'dLng',
+        key: "dLng",
         value: function dLng(lat) {
             return 1 / (111111 * Geometry.cos(lat));
+        }
+    }, {
+        key: "cellToGeoJSON",
+        value: function cellToGeoJSON(cell, origo) {
+            var c = cell;
+            var point = cell.site.point;
+            var polygon_points = [];
+
+            var p0 = new Object();
+
+            var equalVa = c.halfedges[0].edge.va.x == c.halfedges[1].edge.va.x && c.halfedges[0].edge.va.y == c.halfedges[1].edge.va.y;
+            var equalVb = c.halfedges[0].edge.va.x == c.halfedges[1].edge.vb.x && c.halfedges[0].edge.va.y == c.halfedges[1].edge.vb.y;
+            if (equalVa || equalVb) {
+                p0.x = c.halfedges[0].edge.va.x;
+                p0.y = c.halfedges[0].edge.va.y;
+                p0.lat = c.halfedges[0].edge.va.y * point.dLat + origo.vLat;
+                p0.lng = c.halfedges[0].edge.va.x * point.dLng + origo.vLng;
+            } else {
+                p0.x = c.halfedges[0].edge.vb.x;
+                p0.y = c.halfedges[0].edge.vb.y;
+                p0.lat = c.halfedges[0].edge.vb.y * point.dLat + origo.vLat;
+                p0.lng = c.halfedges[0].edge.vb.x * point.dLng + origo.vLng;
+            }
+            polygon_points.push(p0);
+
+            for (var i = 1; i < c.halfedges.length; i++) {
+                if (c.halfedges[i].edge.va.x != polygon_points[i - 1].x || c.halfedges[i].edge.va.y != polygon_points[i - 1].y) {
+                    var p = new Object();
+                    p.x = c.halfedges[i].edge.va.x;
+                    p.y = c.halfedges[i].edge.va.y;
+                    p.lat = c.halfedges[i].edge.va.y * point.dLat + origo.vLat;
+                    p.lng = c.halfedges[i].edge.va.x * point.dLng + origo.vLng;
+                    polygon_points.push(p);
+                } else {
+                    var p = new Object();
+                    p.x = c.halfedges[i].edge.vb.x;
+                    p.y = c.halfedges[i].edge.vb.y;
+                    p.lat = c.halfedges[i].edge.vb.y * point.dLat + origo.vLat;
+                    p.lng = c.halfedges[i].edge.vb.x * point.dLng + origo.vLng;
+                    polygon_points.push(p);
+                }
+            }
+            return {
+                "type": "Polygon",
+                "properties": {
+                    id: c.site.id,
+                    owner: -1
+                },
+                "coordinates": [[].concat(_toConsumableArray(c.halfedges.map(function (v, index) {
+                    return [polygon_points[index].lng, polygon_points[index].lat];
+                })), [[polygon_points[0].lng, polygon_points[0].lat]])]
+            };
         }
     }]);
 
@@ -21880,8 +21934,7 @@ var TileMap = function () {
                     var p = new __WEBPACK_IMPORTED_MODULE_2__Point__["a" /* default */](x, y); // candidate point
                     var dMx = (p.vLng - this.state.origo.vLng) / p.dLng;
                     var dMy = (p.vLat - this.state.origo.vLat) / p.dLat;
-                    this.state.points.push(p);
-                    this.state.sites.push({ x: dMx, y: dMy, r: y, c: x, lat: p.vLat, lng: p.vLng, id: p.id });
+                    this.state.sites.push({ point: p, x: dMx, y: dMy, r: y, c: x, lat: p.vLat, lng: p.vLng, id: p.id });
                 }
             }
             var bbox = { xl: -1000, xr: 10000, yt: -1000, yb: 10000 };
@@ -21895,76 +21948,20 @@ var TileMap = function () {
                 var geojsonObjects = [];
                 $.each(this.state.diagram.cells, function (indexCells, cell) {
                     if (cell.site.r > this.state.minY + 3 && cell.site.r < this.state.maxY - 3 && cell.site.c > this.state.minX + 3 && cell.site.c < this.state.maxX - 3) {
-                        var point = this.state.points[indexCells];
+                        var point = cell.point;
                         var polygon_points = [];
 
                         if (cell.halfedges.length > 0) {
                             if (this.tilesMap[cell.site.id] === undefined) {
-                                this.newTile(this.cellToGeoJSON(cell.site.voronoiId));
+                                this.newTile(__WEBPACK_IMPORTED_MODULE_1__Geometry__["a" /* default */].cellToGeoJSON(cell, this.state.origo));
                             }
                         } else {
+                            // Mark spot of faulty cells
                             L.marker([cell.site.lat, cell.site.lng]).addTo(this.map);
                         }
                     }
                 }.bind(this));
             }.bind(this), 1);
-        }
-    }, {
-        key: 'cellToGeoJSON',
-        value: function cellToGeoJSON(id) {
-            var c = this.state.diagram.cells[id];
-            var point = this.state.points[id];
-            var polygon_points = [];
-
-            var p0 = new Object();
-
-            var equalVa = c.halfedges[0].edge.va.x == c.halfedges[1].edge.va.x && c.halfedges[0].edge.va.y == c.halfedges[1].edge.va.y;
-            var equalVb = c.halfedges[0].edge.va.x == c.halfedges[1].edge.vb.x && c.halfedges[0].edge.va.y == c.halfedges[1].edge.vb.y;
-            if (equalVa || equalVb) {
-                p0.x = c.halfedges[0].edge.va.x;
-                p0.y = c.halfedges[0].edge.va.y;
-                p0.lat = c.halfedges[0].edge.va.y * point.dLat + this.state.origo.vLat;
-                p0.lng = c.halfedges[0].edge.va.x * point.dLng + this.state.origo.vLng;
-            } else {
-                p0.x = c.halfedges[0].edge.vb.x;
-                p0.y = c.halfedges[0].edge.vb.y;
-                p0.lat = c.halfedges[0].edge.vb.y * point.dLat + this.state.origo.vLat;
-                p0.lng = c.halfedges[0].edge.vb.x * point.dLng + this.state.origo.vLng;
-            }
-            polygon_points.push(p0);
-
-            for (var i = 1; i < c.halfedges.length; i++) {
-                if (c.halfedges[i].edge.va.x != polygon_points[i - 1].x || c.halfedges[i].edge.va.y != polygon_points[i - 1].y) {
-                    var p = new Object();
-                    p.x = c.halfedges[i].edge.va.x;
-                    p.y = c.halfedges[i].edge.va.y;
-                    p.lat = c.halfedges[i].edge.va.y * point.dLat + this.state.origo.vLat;
-                    p.lng = c.halfedges[i].edge.va.x * point.dLng + this.state.origo.vLng;
-                    polygon_points.push(p);
-                } else {
-                    var p = new Object();
-                    p.x = c.halfedges[i].edge.vb.x;
-                    p.y = c.halfedges[i].edge.vb.y;
-                    p.lat = c.halfedges[i].edge.vb.y * point.dLat + this.state.origo.vLat;
-                    p.lng = c.halfedges[i].edge.vb.x * point.dLng + this.state.origo.vLng;
-                    polygon_points.push(p);
-                }
-            }
-            var pps = []; // polygon points
-            for (var i = 0; i < c.halfedges.length; i++) {
-                pps.push([polygon_points[i].lng, polygon_points[i].lat]);
-            }
-            pps.push([polygon_points[0].lng, polygon_points[0].lat]);
-            var polygon = {
-                "type": "Polygon",
-                "properties": {
-                    id: c.site.id,
-                    owner: -1
-                },
-                "coordinates": [pps]
-            };
-
-            return polygon;
         }
     }]);
 
@@ -22015,9 +22012,7 @@ var State = function () {
             this.maxLng = bounds.getEast();
             this.origo = new __WEBPACK_IMPORTED_MODULE_2__Point__["a" /* default */](this.minX, this.minY);
 
-            // These two are to be removed?
-            this.sites = []; // basis for voronoi algorithm
-            this.points = []; // 
+            this.sites = []; // basis for voronoi algorithm refreshed at each pan
         }
     }, {
         key: 'getMinMaxXY',

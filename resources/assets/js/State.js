@@ -24,9 +24,7 @@ export default class State {
         this.maxLng = bounds.getEast();
         this.origo = new Point(this.minX,this.minY);
 
-        // These two are to be removed?
-        this.sites = []; // basis for voronoi algorithm
-        this.points = []; // 
+        this.sites = []; // basis for voronoi algorithm refreshed at each pan
     }
 
     getMinMaxXY() {

@@ -45,6 +45,9 @@
 	</div>
 	<div id="map"></div>
 	<div id="footer">
+		<span>Command Center</span>
+		<span>Hall of Fame</span>
+		<span>Home</span>		
 	</div>	    
 
 	<script src="js/app.js"></script>
