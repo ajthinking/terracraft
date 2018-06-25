@@ -7,9 +7,9 @@
 	<title>LaraCraft</title>
 
 	<!-- libs -->
-	<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 	<script src="js/leaflet-pip.min.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.0/seedrandom.min.js"></script>
+	<script src="https:////cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.0/seedrandom.min.js"></script>
 	<script src="js/rhill-voronoi-core.min.js"></script>
 	
     <!-- css -->
