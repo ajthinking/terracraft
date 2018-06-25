@@ -36,7 +36,12 @@ export default class TileMap {
                     return Style.gridOnly()
                 }
             }            
-        }).addTo(this.map);        
+        }).addTo(this.map);
+        
+        this.map.locate({
+            setView: true,
+            watch: true
+        });
     }
 
     newTile(newGeoJsonTile) {

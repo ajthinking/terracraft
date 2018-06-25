@@ -382,7 +382,7 @@ module.exports = {
     d: 50,
     offset: 0.85,
     padding: 10,
-    startPoint: [56.045003, 12.694523],
+    startPoint: [46.045003, 12.694523],
     startZoom: 18,
     minZoom: 16,
     maxZoom: 22,
@@ -21861,6 +21861,11 @@ var TileMap = function () {
                 }
             }
         }).addTo(this.map);
+
+        this.map.locate({
+            setView: true,
+            watch: true
+        });
     }
 
     _createClass(TileMap, [{
