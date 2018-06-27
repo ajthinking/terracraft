@@ -963,7 +963,7 @@ var Point = function () {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(12);
-module.exports = __webpack_require__(43);
+module.exports = __webpack_require__(44);
 
 
 /***/ }),
@@ -974,10 +974,10 @@ module.exports = __webpack_require__(43);
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__TileMap__ = __webpack_require__(37);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Config__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__fortawesome_fontawesome__ = __webpack_require__(39);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__fortawesome_fontawesome_free_regular__ = __webpack_require__(40);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__fortawesome_fontawesome_free_solid__ = __webpack_require__(41);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__fortawesome_fontawesome_free_brands__ = __webpack_require__(42);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__fortawesome_fontawesome__ = __webpack_require__(40);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__fortawesome_fontawesome_free_regular__ = __webpack_require__(41);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__fortawesome_fontawesome_free_solid__ = __webpack_require__(42);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__fortawesome_fontawesome_free_brands__ = __webpack_require__(43);
 __webpack_require__(13);
 
 
@@ -21815,7 +21815,7 @@ module.exports = function spread(callback) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Geometry__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Point__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__State__ = __webpack_require__(38);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Style__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Style__ = __webpack_require__(39);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -21899,10 +21899,14 @@ var TileMap = function () {
         value: function addEvents() {
             this.loadedEvent = jQuery.Event("loaded");
             $("body").bind("loaded", this.drawDiagram.bind(this));
+
             this.map.on('locationfound', function (e) {
                 if (!this.userPos) {
-                    this.setViewOnUser(e.latlng);
+                    this.userPos = true;
+                    this.marker = L.marker(e.latlng).addTo(this.map);
+                    this.map.setView(e.latlng);
                 }
+                this.marker.setLatLng(e.latlng);
             }.bind(this));
 
             this.map.on('zoom', function () {
@@ -21924,11 +21928,6 @@ var TileMap = function () {
                     }
                 }
             }.bind(this));
-        }
-    }, {
-        key: 'setViewOnUser',
-        value: function setViewOnUser(latlng) {
-            this.map.setView(latlng);
         }
     }, {
         key: 'load',
@@ -22063,6 +22062,53 @@ var State = function () {
 
 /***/ }),
 /* 39 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Style = function () {
+    function Style() {
+        _classCallCheck(this, Style);
+    }
+
+    _createClass(Style, null, [{
+        key: "gridOnly",
+        value: function gridOnly() {
+            return {
+                color: "black",
+                fillColor: "black",
+                weight: 1.5,
+                fill: true,
+                opacity: 0.3,
+                fillOpacity: 0.01,
+                smoothFactor: 0
+            };
+        }
+    }, {
+        key: "ownTile",
+        value: function ownTile() {
+            return {
+                color: "darkgreen",
+                fillColor: "green",
+                weight: 1.5,
+                fill: true,
+                opacity: 1.0,
+                fillOpacity: 0.75,
+                smoothFactor: 0
+            };
+        }
+    }]);
+
+    return Style;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (Style);
+
+/***/ }),
+/* 40 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23883,7 +23929,7 @@ var config = api$1.config;
 
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24370,7 +24416,7 @@ bunker(function () {
 
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26381,7 +26427,7 @@ bunker(function () {
 
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27600,61 +27646,10 @@ bunker(function () {
 
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 44 */,
-/* 45 */,
-/* 46 */,
-/* 47 */,
-/* 48 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Style = function () {
-    function Style() {
-        _classCallCheck(this, Style);
-    }
-
-    _createClass(Style, null, [{
-        key: "gridOnly",
-        value: function gridOnly() {
-            return {
-                color: "black",
-                fillColor: "black",
-                weight: 1.5,
-                fill: true,
-                opacity: 0.3,
-                fillOpacity: 0.01,
-                smoothFactor: 0
-            };
-        }
-    }, {
-        key: "ownTile",
-        value: function ownTile() {
-            return {
-                color: "darkgreen",
-                fillColor: "green",
-                weight: 1.5,
-                fill: true,
-                opacity: 1.0,
-                fillOpacity: 0.75,
-                smoothFactor: 0
-            };
-        }
-    }]);
-
-    return Style;
-}();
-
-/* harmony default export */ __webpack_exports__["a"] = (Style);
 
 /***/ })
 /******/ ]);

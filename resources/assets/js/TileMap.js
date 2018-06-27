@@ -69,10 +69,14 @@ export default class TileMap {
     addEvents() {
         this.loadedEvent = jQuery.Event("loaded");
         $("body").bind("loaded", this.drawDiagram.bind(this));
-        this.map.on('locationfound', function(e) {            
+        
+        this.map.on('locationfound', function(e) {                        
             if(!this.userPos) {
-                this.setViewOnUser(e.latlng)
-            }
+                this.userPos = true;
+                this.marker = L.marker(e.latlng).addTo(this.map);
+                this.map.setView(e.latlng)
+            }            
+            this.marker.setLatLng(e.latlng);
         }.bind(this));
         
         this.map.on('zoom', function () {
@@ -94,10 +98,6 @@ export default class TileMap {
                 }
             }
         }.bind(this));
-    }
-
-    setViewOnUser(latlng) {
-        this.map.setView(latlng)
     }
 
     load() {
