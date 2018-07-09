@@ -44,28 +44,6 @@
 		</span>
 	</div>
 	<div id="map"></div>
-	<div id="footer">
-		<span class="header-item">
-			<i class="fab fa-fort-awesome"></i>
-			<span>City Hall</span>
-		</span>
-		<span class="header-item">
-			<i class="fas fa-gavel"></i>
-			<span>Council</span>
-		</span>
-		<span class="header-item">
-			<i class="fas fa-crown"></i>
-			<span>Hall of Fame</span>
-		</span>
-		<span class="header-item">
-			<i class="fas fa-shield-alt"></i>
-			<span>Defenses</span>
-		</span>
-		<span class="header-item">
-			<i class="fas fa-skull"></i>
-			<span>Death</span>
-		</span>								
-	</div>	    
 
 	<script src="js/app.js"></script>
 
