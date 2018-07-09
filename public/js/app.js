@@ -21828,6 +21828,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
 
+
 var TileMap = function () {
     function TileMap() {
         _classCallCheck(this, TileMap);
@@ -21850,27 +21851,43 @@ var TileMap = function () {
         this.tilesGeoJsonLayerGroup = L.geoJson(null, {
             onEachFeature: function (feature, layer) {
                 this.tilesMap[feature.properties.id] = layer;
-                layer.on('click', function () {
+                layer.on('click', function (polygon) {
+                    if (!this.countTaken) {
+                        this.countTaken = 0;
+                    }
+
+                    this.countTaken++;
                     feature.properties.owner = "taken";
                     this.updateTile(feature);
                 }.bind(this, feature));
             }.bind(this),
-            style: function style(feature) {
+            style: function (feature) {
                 if (feature.geometry.properties.owner == "taken") {
-                    return __WEBPACK_IMPORTED_MODULE_4__Style__["a" /* default */].ownTile();
+                    return __WEBPACK_IMPORTED_MODULE_4__Style__["a" /* default */].demoTile(this.countTaken);
                 } else {
                     return __WEBPACK_IMPORTED_MODULE_4__Style__["a" /* default */].gridOnly();
                 }
-            }
+            }.bind(this)
         }).addTo(this.map);
 
         this.map.locate({
             setView: false,
             watch: true
         });
+
+        L.marker([56.057034, 12.689251], {
+            icon: __WEBPACK_IMPORTED_MODULE_5__Icons__["a" /* blackDot */]
+        }).addTo(this.map);
+
+        L.marker([56.058034, 12.690251], {
+            icon: __WEBPACK_IMPORTED_MODULE_5__Icons__["a" /* blackDot */]
+        }).addTo(this.map);
     }
 
     _createClass(TileMap, [{
+        key: 'demoColor',
+        value: function demoColor() {}
+    }, {
         key: 'newTile',
         value: function newTile(newGeoJsonTile) {
             this.tilesGeoJsonLayerGroup.addData(newGeoJsonTile);
@@ -21906,7 +21923,7 @@ var TileMap = function () {
                 if (!this.userPos) {
                     this.userPos = true;
                     this.marker = L.marker(e.latlng, {
-                        icon: __WEBPACK_IMPORTED_MODULE_5__Icons__["a" /* blueDot */]
+                        icon: __WEBPACK_IMPORTED_MODULE_5__Icons__["b" /* blueDot */]
                     }).addTo(this.map);
                     this.map.setView(e.latlng);
                 }
@@ -22104,6 +22121,28 @@ var Style = function () {
                 smoothFactor: 0
             };
         }
+    }, {
+        key: "enemyTile",
+        value: function enemyTile() {
+            return {
+                color: "darkred",
+                fillColor: "red",
+                weight: 1.5,
+                fill: true,
+                opacity: 1.0,
+                fillOpacity: 0.75,
+                smoothFactor: 0
+            };
+        }
+    }, {
+        key: "demoTile",
+        value: function demoTile(countTaken) {
+            if (countTaken < 12) {
+                return Style.enemyTile();
+            }
+
+            return Style.ownTile();
+        }
     }]);
 
     return Style;
@@ -22116,9 +22155,17 @@ var Style = function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return blueDot; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return blueDot; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return blackDot; });
 var blueDot = L.icon({
     iconUrl: 'img/blueDot.png',
+
+    iconSize: [24, 24], // size of the icon
+    iconAnchor: [12, 12] // point of the icon which will correspond to marker's location
+});
+
+var blackDot = L.icon({
+    iconUrl: 'img/blackDot.png',
 
     iconSize: [24, 24], // size of the icon
     iconAnchor: [12, 12] // point of the icon which will correspond to marker's location

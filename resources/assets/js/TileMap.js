@@ -4,6 +4,7 @@ import Point from './Point'
 import State from './State'
 import Style from './Style'
 import { blueDot } from './Icons'
+import { blackDot } from './Icons'
 
 export default class TileMap {
     constructor() {
@@ -25,24 +26,43 @@ export default class TileMap {
         this.tilesGeoJsonLayerGroup = L.geoJson(null,{
             onEachFeature: function (feature, layer) {
                 this.tilesMap[feature.properties.id] = layer;
-                layer.on('click', function() {
+                layer.on('click', function(polygon) {
+                    if(!this.countTaken) {
+                        this.countTaken = 0;
+                    }
+
+                    this.countTaken++;                    
                     feature.properties.owner = "taken"
                     this.updateTile(feature);
                 }.bind(this, feature));                
             }.bind(this),
             style: function(feature) {
                 if(feature.geometry.properties.owner == "taken") {
-                    return Style.ownTile()
+                    return Style.demoTile(this.countTaken)
                 } else {
                     return Style.gridOnly()
                 }
-            }            
+            }.bind(this)            
         }).addTo(this.map);
         
         this.map.locate({
             setView: false,
             watch: true
         });
+
+        L.marker([56.057034, 12.689251], { 
+            icon: blackDot 
+        }).addTo(this.map);
+
+        L.marker([56.058034, 12.690251], { 
+            icon: blackDot 
+        }).addTo(this.map);
+    }
+
+    demoColor() {
+
+
+
     }
 
     newTile(newGeoJsonTile) {

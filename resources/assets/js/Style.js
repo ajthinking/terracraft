@@ -22,5 +22,25 @@ export default class Style {
             fillOpacity: 0.75,
             smoothFactor: 0
         }        
+    }
+
+    static enemyTile() {
+        return {
+            color: "darkred",
+            fillColor: "red",
+            weight: 1.5,
+            fill: true,
+            opacity: 1.0,
+            fillOpacity: 0.75,
+            smoothFactor: 0
+        }        
+    }    
+    
+    static demoTile(countTaken) {
+        if(countTaken < 12) {
+            return Style.enemyTile();
+        }
+
+        return Style.ownTile();        
     }    
 }
