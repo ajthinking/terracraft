@@ -21816,9 +21816,11 @@ module.exports = function spread(callback) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Point__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__State__ = __webpack_require__(38);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Style__ = __webpack_require__(39);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__Icons__ = __webpack_require__(49);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 
 
 
@@ -21903,7 +21905,9 @@ var TileMap = function () {
             this.map.on('locationfound', function (e) {
                 if (!this.userPos) {
                     this.userPos = true;
-                    this.marker = L.marker(e.latlng).addTo(this.map);
+                    this.marker = L.marker(e.latlng, {
+                        icon: __WEBPACK_IMPORTED_MODULE_5__Icons__["a" /* blueDot */]
+                    }).addTo(this.map);
                     this.map.setView(e.latlng);
                 }
                 this.marker.setLatLng(e.latlng);
@@ -27650,6 +27654,23 @@ bunker(function () {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 45 */,
+/* 46 */,
+/* 47 */,
+/* 48 */,
+/* 49 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return blueDot; });
+var blueDot = L.icon({
+    iconUrl: 'img/blueDot.png',
+
+    iconSize: [24, 24], // size of the icon
+    iconAnchor: [12, 12] // point of the icon which will correspond to marker's location
+});
 
 /***/ })
 /******/ ]);

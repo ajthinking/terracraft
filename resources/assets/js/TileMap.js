@@ -3,6 +3,7 @@ import Geometry from './Geometry'
 import Point from './Point'
 import State from './State'
 import Style from './Style'
+import { blueDot } from './Icons'
 
 export default class TileMap {
     constructor() {
@@ -73,7 +74,9 @@ export default class TileMap {
         this.map.on('locationfound', function(e) {                        
             if(!this.userPos) {
                 this.userPos = true;
-                this.marker = L.marker(e.latlng).addTo(this.map);
+                this.marker = L.marker(e.latlng, { 
+                    icon: blueDot 
+                }).addTo(this.map);
                 this.map.setView(e.latlng)
             }            
             this.marker.setLatLng(e.latlng);
