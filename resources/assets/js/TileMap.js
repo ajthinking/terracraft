@@ -98,6 +98,9 @@ export default class TileMap {
                     icon: blueDot 
                 }).addTo(this.map);
                 this.map.setView(e.latlng)
+
+                var pulsingIcon = L.icon.pulse({iconSize:[20,20],color:'red'});
+                var marker = L.marker(e.latlng,{icon: pulsingIcon}).addTo(this.map);
             }            
             this.marker.setLatLng(e.latlng);
         }.bind(this));
