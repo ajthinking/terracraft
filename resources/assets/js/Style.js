@@ -15,7 +15,7 @@ export default class Style {
     static ownTile() {
         return {
             color: "darkgreen",
-            fillColor: "green",
+            fillColor: "#006600",
             weight: 1.5,
             fill: true,
             opacity: 1.0,
@@ -27,7 +27,7 @@ export default class Style {
     static enemyTile() {
         return {
             color: "darkred",
-            fillColor: "red",
+            fillColor: "#990000",
             weight: 1.5,
             fill: true,
             opacity: 1.0,

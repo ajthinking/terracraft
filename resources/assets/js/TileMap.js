@@ -99,7 +99,7 @@ export default class TileMap {
                 }).addTo(this.map);
                 this.map.setView(e.latlng)
 
-                var pulsingIcon = L.icon.pulse({iconSize:[20,20],color:'red'});
+                var pulsingIcon = L.icon.pulse({iconSize:[20,20],color:'#990000'});
                 var marker = L.marker(e.latlng,{icon: pulsingIcon}).addTo(this.map);
             }            
             this.marker.setLatLng(e.latlng);
