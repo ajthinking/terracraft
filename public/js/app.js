@@ -22137,7 +22137,7 @@ var Style = function () {
         value: function ownTile() {
             return {
                 color: "darkgreen",
-                fillColor: "#006600",
+                fillColor: "#94A73A",
                 weight: 1.5,
                 fill: true,
                 opacity: 1.0,
