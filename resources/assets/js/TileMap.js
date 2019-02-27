@@ -37,11 +37,7 @@ export default class TileMap {
                 }.bind(this, feature));                
             }.bind(this),
             style: function(feature) {
-                if(feature.geometry.properties.owner == "taken") {
-                    return Style.demoTile(this.countTaken)
-                } else {
-                    return Style.gridOnly()
-                }
+                return feature.geometry.properties.owner == "taken" ? Style.ownTile() : Style.gridOnly();
             }.bind(this)            
         }).addTo(this.map);
         
@@ -49,14 +45,6 @@ export default class TileMap {
             setView: false,
             watch: true
         });
-
-        L.marker([56.057034, 12.689251], { 
-            icon: blackDot 
-        }).addTo(this.map);
-
-        L.marker([56.058034, 12.690251], { 
-            icon: blackDot 
-        }).addTo(this.map);
     }
 
     newTile(newGeoJsonTile) {
@@ -93,7 +81,7 @@ export default class TileMap {
                 }).addTo(this.map);
                 this.map.setView(e.latlng)
 
-                var pulsingIcon = L.icon.pulse({iconSize:[20,20],color:'#990000'});
+                var pulsingIcon = L.icon.pulse({iconSize:[20,20],color:'darkgreen'});
                 var marker = L.marker(e.latlng,{icon: pulsingIcon}).addTo(this.map);
             }            
             this.marker.setLatLng(e.latlng);

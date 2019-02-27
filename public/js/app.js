@@ -963,8 +963,8 @@ var Point = function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return blueDot; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return blackDot; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return blueDot; });
+/* unused harmony export blackDot */
 var blueDot = L.icon({
     iconUrl: 'img/blueDot.png',
 
@@ -21883,11 +21883,7 @@ var TileMap = function () {
                 }.bind(this, feature));
             }.bind(this),
             style: function (feature) {
-                if (feature.geometry.properties.owner == "taken") {
-                    return __WEBPACK_IMPORTED_MODULE_4__Style__["a" /* default */].demoTile(this.countTaken);
-                } else {
-                    return __WEBPACK_IMPORTED_MODULE_4__Style__["a" /* default */].gridOnly();
-                }
+                return feature.geometry.properties.owner == "taken" ? __WEBPACK_IMPORTED_MODULE_4__Style__["a" /* default */].ownTile() : __WEBPACK_IMPORTED_MODULE_4__Style__["a" /* default */].gridOnly();
             }.bind(this)
         }).addTo(this.map);
 
@@ -21895,14 +21891,6 @@ var TileMap = function () {
             setView: false,
             watch: true
         });
-
-        L.marker([56.057034, 12.689251], {
-            icon: __WEBPACK_IMPORTED_MODULE_5__Icons__["a" /* blackDot */]
-        }).addTo(this.map);
-
-        L.marker([56.058034, 12.690251], {
-            icon: __WEBPACK_IMPORTED_MODULE_5__Icons__["a" /* blackDot */]
-        }).addTo(this.map);
     }
 
     _createClass(TileMap, [{
@@ -21941,11 +21929,11 @@ var TileMap = function () {
                 if (!this.userPos) {
                     this.userPos = true;
                     this.marker = L.marker(e.latlng, {
-                        icon: __WEBPACK_IMPORTED_MODULE_5__Icons__["b" /* blueDot */]
+                        icon: __WEBPACK_IMPORTED_MODULE_5__Icons__["a" /* blueDot */]
                     }).addTo(this.map);
                     this.map.setView(e.latlng);
 
-                    var pulsingIcon = L.icon.pulse({ iconSize: [20, 20], color: '#990000' });
+                    var pulsingIcon = L.icon.pulse({ iconSize: [20, 20], color: 'darkgreen' });
                     var marker = L.marker(e.latlng, { icon: pulsingIcon }).addTo(this.map);
                 }
                 this.marker.setLatLng(e.latlng);
@@ -22154,15 +22142,6 @@ var Style = function () {
                 fillOpacity: 0.75,
                 smoothFactor: 0
             };
-        }
-    }, {
-        key: "demoTile",
-        value: function demoTile(countTaken) {
-            if (countTaken < 12) {
-                //return Style.enemyTile();
-            }
-
-            return Style.ownTile();
         }
     }]);
 

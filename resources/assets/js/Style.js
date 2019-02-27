@@ -35,12 +35,4 @@ export default class Style {
             smoothFactor: 0
         }        
     }    
-    
-    static demoTile(countTaken) {
-        if(countTaken < 12) {
-            //return Style.enemyTile();
-        }
-
-        return Style.ownTile();        
-    }    
 }
