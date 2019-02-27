@@ -3,8 +3,6 @@ import Geometry from './Geometry'
 import Point from './Point'
 import State from './State'
 import Style from './Style'
-import { blueDot } from './Icons'
-import { blackDot } from './Icons'
 
 export default class TileMap {
     constructor() {
@@ -26,12 +24,7 @@ export default class TileMap {
         this.tilesGeoJsonLayerGroup = L.geoJson(null,{
             onEachFeature: function (feature, layer) {
                 this.tilesMap[feature.properties.id] = layer;
-                layer.on('click', function(polygon) {
-                    if(!this.countTaken) {
-                        this.countTaken = 0;
-                    }
-
-                    this.countTaken++;                    
+                layer.on('click', function(polygon) {     
                     feature.properties.owner = "taken"
                     this.updateTile(feature);
                 }.bind(this, feature));                
@@ -74,15 +67,14 @@ export default class TileMap {
         $("body").bind("loaded", this.drawDiagram.bind(this));
         
         this.map.on('locationfound', function(e) {                        
+            var pulsingIcon = L.icon.pulse({iconSize:[20,20],color:'darkgreen'});
+
             if(!this.userPos) {
                 this.userPos = true;
                 this.marker = L.marker(e.latlng, { 
-                    icon: blueDot 
+                    icon: pulsingIcon 
                 }).addTo(this.map);
                 this.map.setView(e.latlng)
-
-                var pulsingIcon = L.icon.pulse({iconSize:[20,20],color:'darkgreen'});
-                var marker = L.marker(e.latlng,{icon: pulsingIcon}).addTo(this.map);
             }            
             this.marker.setLatLng(e.latlng);
         }.bind(this));
