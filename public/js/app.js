@@ -21906,9 +21906,6 @@ var TileMap = function () {
     }
 
     _createClass(TileMap, [{
-        key: 'demoColor',
-        value: function demoColor() {}
-    }, {
         key: 'newTile',
         value: function newTile(newGeoJsonTile) {
             this.tilesGeoJsonLayerGroup.addData(newGeoJsonTile);
@@ -22162,7 +22159,7 @@ var Style = function () {
         key: "demoTile",
         value: function demoTile(countTaken) {
             if (countTaken < 12) {
-                return Style.enemyTile();
+                //return Style.enemyTile();
             }
 
             return Style.ownTile();

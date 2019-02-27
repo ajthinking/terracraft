@@ -38,7 +38,7 @@ export default class Style {
     
     static demoTile(countTaken) {
         if(countTaken < 12) {
-            return Style.enemyTile();
+            //return Style.enemyTile();
         }
 
         return Style.ownTile();        

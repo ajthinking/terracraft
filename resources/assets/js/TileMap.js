@@ -59,12 +59,6 @@ export default class TileMap {
         }).addTo(this.map);
     }
 
-    demoColor() {
-
-
-
-    }
-
     newTile(newGeoJsonTile) {
         this.tilesGeoJsonLayerGroup.addData(newGeoJsonTile);
     }

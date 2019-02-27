@@ -1,6 +1,21 @@
 ## TerraCraft
 <img src="https://i.imgur.com/IwKcMV8.png"></img>
 
+
+## Development installation
+```
+git clone git@github.com:ajthinking/terracraft.git
+cd terracraft
+cp .env.example .env
+# set your database
+composer install
+php artisan key:generate
+php artisan migrate:fresh --seed
+npm install
+npm run dev
+valet secure # https required for gps
+```
+
 ## Thesaurus
 | Name        | Meaning |
 | ------------- |------|
