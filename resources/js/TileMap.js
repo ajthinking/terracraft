@@ -14,26 +14,28 @@ export default class TileMap {
             })
         }).setView(Config.startPoint, Config.startZoom);
 
+        // What is the purpose of the tilesMap?
         this.tilesMap = {};
+        this.owners = {};
         this.state = new State(this.map);
         this.addBaseMap()
         this.addEvents()
-        this.load()   
-        this.state.diagram = this.generateDiagram();
-
-        
+        //this.load()   
+        //this.state.diagram = this.generateDiagram();
         
         this.tilesGeoJsonLayerGroup = L.geoJson(null,{
             onEachFeature: function (feature, layer) {
                 this.tilesMap[feature.properties.id] = layer;
-                layer.on('click', function(polygon) {     
-                    feature.properties.owner = user.id
+                console.log("this.tilesMap populated here!")
+                layer.on('click', function(polygon) {
+                    //feature.properties.owner = user.id
+                    //console.log(polygon.properties.id, polygon.properties.owner)
+
                     this.conquerTile(feature)
-                    this.updateTile(feature);
+                    //this.updateTile(feature);
                 }.bind(this, feature));                
             }.bind(this),
             style: function(feature) {
-                console.log(feature.geometry.properties.owner)
                 return feature.geometry.properties.owner == user.id ? Style.ownTile() : Style.gridOnly();
             }.bind(this)            
         }).addTo(this.map);
@@ -58,6 +60,7 @@ export default class TileMap {
             return response.json()
         }).then(data => {
             //console.log(data)
+            this.load()
         });
     }
 
@@ -71,7 +74,7 @@ export default class TileMap {
     }
     
     deleteTile(tileToDelete) {
-        var deletedTile = this.tilesMap[tileToDelete.properties.id];
+        var deletedTile = this.tilesMap[tileToDelete.geometry.properties.id];
         this.tilesGeoJsonLayerGroup.removeLayer(deletedTile);
     }
 
@@ -104,6 +107,7 @@ export default class TileMap {
         }.bind(this));
          
         this.map.on('moveend', function() {
+            console.log("map moveend")
             var center = this.map.getCenter();
             var xyCenter = Geometry.latLngToXY(center);
             var xCenter = xyCenter[0];
@@ -121,6 +125,8 @@ export default class TileMap {
     }
 
     load() {
+        var loadingJob = Math.floor(Math.random() * 100)
+        console.log("loading job", loadingJob, "started")
         fetch('/tiles', {
             method: 'GET',
             headers: {
@@ -130,16 +136,20 @@ export default class TileMap {
         }).then(response => {
             return response.json()
         }).then(data => {
-            console.log("Loaded data succesfully", data)
+            
             data.forEach(tile => {
                 if(this.tilesMap[tile.id]) {
-                    this.tilesMap[tile.id].feature.properties.owner = tile.user_id
+                    this.tilesMap[tile.id].feature.geometry.properties.owner = tile.user_id
                     this.updateTile(
                         this.tilesMap[tile.id].feature
                     )
                 }
+                
+                this.owners[tile.id] = tile
+                
             });
-            
+            console.log(this.owners)
+            console.log("loading job", loadingJob, "completed with", data.length, "results");
             $("body").trigger(this.loadedEvent);
         });
         
@@ -147,6 +157,7 @@ export default class TileMap {
     }
 
     generateDiagram() {
+        console.log("Generating Diagram")
         var center = this.map.getCenter();
         var xyCenter = Geometry.latLngToXY(center);
         this.xLastCenter = xyCenter[0];
@@ -161,10 +172,12 @@ export default class TileMap {
         }
         var bbox = {xl: -1000, xr: 10000, yt: -1000, yb: 10000};
         var voronoi = new Voronoi();
+        console.log("Diagram generated")
         return voronoi.compute(this.state.sites, bbox);
     }
 
-    drawDiagram() {    
+    drawDiagram() {
+        console.log("drawing with", Object.keys(this.tilesMap).length, "objects in tilesMap")
         setTimeout(function() {
             var geojsonObjects = [];
             $.each(this.state.diagram.cells, function(indexCells, cell) {
@@ -174,7 +187,11 @@ export default class TileMap {
                     
                     if(cell.halfedges.length > 0) {
                         if(this.tilesMap[cell.site.id] === undefined) {
-                            this.newTile(Geometry.cellToGeoJSON(cell, this.state.origo));
+                            var owner = -1;
+                            if (cell.site.id in this.owners) {
+                                owner = this.owners[cell.site.id].user_id
+                            } 
+                            this.newTile(Geometry.cellToGeoJSON(cell, this.state.origo, owner));
                         }
                     } else {
                         // Mark spot of faulty cells
@@ -184,4 +201,6 @@ export default class TileMap {
             }.bind(this));
         }.bind(this), 1);        
     }
+
+
 }

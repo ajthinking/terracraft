@@ -21852,7 +21852,7 @@ function () {
     }
   }, {
     key: "cellToGeoJSON",
-    value: function cellToGeoJSON(cell, origo) {
+    value: function cellToGeoJSON(cell, origo, owner) {
       var c = cell;
       var point = cell.site.point;
       var polygon_points = [];
@@ -21896,7 +21896,7 @@ function () {
         "type": "Polygon",
         "properties": {
           id: c.site.id,
-          owner: -1
+          owner: owner
         },
         "coordinates": [[].concat(_toConsumableArray(c.halfedges.map(function (v, index) {
           return [polygon_points[index].lng, polygon_points[index].lat];
@@ -22170,24 +22170,26 @@ function () {
       renderer: L.svg({
         padding: 0.5
       })
-    }).setView(_Config__WEBPACK_IMPORTED_MODULE_0__["default"].startPoint, _Config__WEBPACK_IMPORTED_MODULE_0__["default"].startZoom);
+    }).setView(_Config__WEBPACK_IMPORTED_MODULE_0__["default"].startPoint, _Config__WEBPACK_IMPORTED_MODULE_0__["default"].startZoom); // What is the purpose of the tilesMap?
+
     this.tilesMap = {};
+    this.owners = {};
     this.state = new _State__WEBPACK_IMPORTED_MODULE_3__["default"](this.map);
     this.addBaseMap();
-    this.addEvents();
-    this.load();
-    this.state.diagram = this.generateDiagram();
+    this.addEvents(); //this.load()   
+    //this.state.diagram = this.generateDiagram();
+
     this.tilesGeoJsonLayerGroup = L.geoJson(null, {
       onEachFeature: function (feature, layer) {
         this.tilesMap[feature.properties.id] = layer;
+        console.log("this.tilesMap populated here!");
         layer.on('click', function (polygon) {
-          feature.properties.owner = user.id;
-          this.conquerTile(feature);
-          this.updateTile(feature);
+          //feature.properties.owner = user.id
+          //console.log(polygon.properties.id, polygon.properties.owner)
+          this.conquerTile(feature); //this.updateTile(feature);
         }.bind(this, feature));
       }.bind(this),
       style: function (feature) {
-        console.log(feature.geometry.properties.owner);
         return feature.geometry.properties.owner == user.id ? _Style__WEBPACK_IMPORTED_MODULE_4__["default"].ownTile() : _Style__WEBPACK_IMPORTED_MODULE_4__["default"].gridOnly();
       }.bind(this)
     }).addTo(this.map);
@@ -22200,6 +22202,8 @@ function () {
   _createClass(TileMap, [{
     key: "conquerTile",
     value: function conquerTile(tile) {
+      var _this = this;
+
       fetch('/tiles', {
         method: 'POST',
         body: JSON.stringify({
@@ -22211,7 +22215,9 @@ function () {
         }
       }).then(function (response) {
         return response.json();
-      }).then(function (data) {//console.log(data)
+      }).then(function (data) {
+        //console.log(data)
+        _this.load();
       });
     }
   }, {
@@ -22228,7 +22234,7 @@ function () {
   }, {
     key: "deleteTile",
     value: function deleteTile(tileToDelete) {
-      var deletedTile = this.tilesMap[tileToDelete.properties.id];
+      var deletedTile = this.tilesMap[tileToDelete.geometry.properties.id];
       this.tilesGeoJsonLayerGroup.removeLayer(deletedTile);
     }
   }, {
@@ -22265,6 +22271,7 @@ function () {
         this.lastZoom = this.map.getZoom();
       }.bind(this));
       this.map.on('moveend', function () {
+        console.log("map moveend");
         var center = this.map.getCenter();
         var xyCenter = _Geometry__WEBPACK_IMPORTED_MODULE_1__["default"].latLngToXY(center);
         var xCenter = xyCenter[0];
@@ -22283,8 +22290,10 @@ function () {
   }, {
     key: "load",
     value: function load() {
-      var _this = this;
+      var _this2 = this;
 
+      var loadingJob = Math.floor(Math.random() * 100);
+      console.log("loading job", loadingJob, "started");
       fetch('/tiles', {
         method: 'GET',
         headers: {
@@ -22294,21 +22303,25 @@ function () {
       }).then(function (response) {
         return response.json();
       }).then(function (data) {
-        console.log("Loaded data succesfully", data);
         data.forEach(function (tile) {
-          if (_this.tilesMap[tile.id]) {
-            _this.tilesMap[tile.id].feature.properties.owner = tile.user_id;
+          if (_this2.tilesMap[tile.id]) {
+            _this2.tilesMap[tile.id].feature.geometry.properties.owner = tile.user_id;
 
-            _this.updateTile(_this.tilesMap[tile.id].feature);
+            _this2.updateTile(_this2.tilesMap[tile.id].feature);
           }
+
+          _this2.owners[tile.id] = tile;
         });
-        $("body").trigger(_this.loadedEvent);
+        console.log(_this2.owners);
+        console.log("loading job", loadingJob, "completed with", data.length, "results");
+        $("body").trigger(_this2.loadedEvent);
       });
       return;
     }
   }, {
     key: "generateDiagram",
     value: function generateDiagram() {
+      console.log("Generating Diagram");
       var center = this.map.getCenter();
       var xyCenter = _Geometry__WEBPACK_IMPORTED_MODULE_1__["default"].latLngToXY(center);
       this.xLastCenter = xyCenter[0];
@@ -22340,11 +22353,13 @@ function () {
         yb: 10000
       };
       var voronoi = new Voronoi();
+      console.log("Diagram generated");
       return voronoi.compute(this.state.sites, bbox);
     }
   }, {
     key: "drawDiagram",
     value: function drawDiagram() {
+      console.log("drawing with", Object.keys(this.tilesMap).length, "objects in tilesMap");
       setTimeout(function () {
         var geojsonObjects = [];
         $.each(this.state.diagram.cells, function (indexCells, cell) {
@@ -22354,7 +22369,13 @@ function () {
 
             if (cell.halfedges.length > 0) {
               if (this.tilesMap[cell.site.id] === undefined) {
-                this.newTile(_Geometry__WEBPACK_IMPORTED_MODULE_1__["default"].cellToGeoJSON(cell, this.state.origo));
+                var owner = -1;
+
+                if (cell.site.id in this.owners) {
+                  owner = this.owners[cell.site.id].user_id;
+                }
+
+                this.newTile(_Geometry__WEBPACK_IMPORTED_MODULE_1__["default"].cellToGeoJSON(cell, this.state.origo, owner));
               }
             } else {
               // Mark spot of faulty cells

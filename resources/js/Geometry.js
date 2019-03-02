@@ -37,7 +37,7 @@ export default class Geometry {
         return 1/(111111*Geometry.cos(lat));
     }
 
-    static cellToGeoJSON(cell, origo) {
+    static cellToGeoJSON(cell, origo, owner) {
         var c = cell;
         var point = cell.site.point;
         var polygon_points = [];
@@ -81,7 +81,7 @@ export default class Geometry {
             "type": "Polygon",
             "properties": {
                 id: c.site.id,
-                owner: -1
+                owner: owner
             },
             "coordinates": [
                 [
