@@ -59,7 +59,6 @@ export default class TileMap {
         }).then(response => {
             return response.json()
         }).then(data => {
-            //console.log(data)
             this.load()
         });
     }
@@ -107,7 +106,7 @@ export default class TileMap {
         }.bind(this));
          
         this.map.on('moveend', function() {
-            console.log("map moveend")
+            console.log("Map moveend")
             var center = this.map.getCenter();
             var xyCenter = Geometry.latLngToXY(center);
             var xCenter = xyCenter[0];
@@ -148,7 +147,6 @@ export default class TileMap {
                 this.owners[tile.id] = tile
                 
             });
-            console.log(this.owners)
             console.log("loading job", loadingJob, "completed with", data.length, "results");
             $("body").trigger(this.loadedEvent);
         });
@@ -172,12 +170,11 @@ export default class TileMap {
         }
         var bbox = {xl: -1000, xr: 10000, yt: -1000, yb: 10000};
         var voronoi = new Voronoi();
-        console.log("Diagram generated")
         return voronoi.compute(this.state.sites, bbox);
     }
 
     drawDiagram() {
-        console.log("drawing with", Object.keys(this.tilesMap).length, "objects in tilesMap")
+        console.log("Drawing...")
         setTimeout(function() {
             var geojsonObjects = [];
             $.each(this.state.diagram.cells, function(indexCells, cell) {

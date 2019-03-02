@@ -22216,7 +22216,6 @@ function () {
       }).then(function (response) {
         return response.json();
       }).then(function (data) {
-        //console.log(data)
         _this.load();
       });
     }
@@ -22271,7 +22270,7 @@ function () {
         this.lastZoom = this.map.getZoom();
       }.bind(this));
       this.map.on('moveend', function () {
-        console.log("map moveend");
+        console.log("Map moveend");
         var center = this.map.getCenter();
         var xyCenter = _Geometry__WEBPACK_IMPORTED_MODULE_1__["default"].latLngToXY(center);
         var xCenter = xyCenter[0];
@@ -22312,7 +22311,6 @@ function () {
 
           _this2.owners[tile.id] = tile;
         });
-        console.log(_this2.owners);
         console.log("loading job", loadingJob, "completed with", data.length, "results");
         $("body").trigger(_this2.loadedEvent);
       });
@@ -22353,13 +22351,12 @@ function () {
         yb: 10000
       };
       var voronoi = new Voronoi();
-      console.log("Diagram generated");
       return voronoi.compute(this.state.sites, bbox);
     }
   }, {
     key: "drawDiagram",
     value: function drawDiagram() {
-      console.log("drawing with", Object.keys(this.tilesMap).length, "objects in tilesMap");
+      console.log("Drawing...");
       setTimeout(function () {
         var geojsonObjects = [];
         $.each(this.state.diagram.cells, function (indexCells, cell) {
