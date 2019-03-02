@@ -6,6 +6,7 @@ import Style from './Style'
 
 export default class TileMap {
     constructor() {
+
         this.map = L.map('map', {
             zoomControl:false,
             renderer: L.svg({
@@ -13,30 +14,50 @@ export default class TileMap {
             })
         }).setView(Config.startPoint, Config.startZoom);
 
+        this.tilesMap = {};
         this.state = new State(this.map);
         this.addBaseMap()
         this.addEvents()
         this.load()   
         this.state.diagram = this.generateDiagram();
 
-        this.tilesMap = {};
+        
         
         this.tilesGeoJsonLayerGroup = L.geoJson(null,{
             onEachFeature: function (feature, layer) {
                 this.tilesMap[feature.properties.id] = layer;
                 layer.on('click', function(polygon) {     
-                    feature.properties.owner = "taken"
+                    feature.properties.owner = user.id
+                    this.conquerTile(feature)
                     this.updateTile(feature);
                 }.bind(this, feature));                
             }.bind(this),
             style: function(feature) {
-                return feature.geometry.properties.owner == "taken" ? Style.ownTile() : Style.gridOnly();
+                console.log(feature.geometry.properties.owner)
+                return feature.geometry.properties.owner == user.id ? Style.ownTile() : Style.gridOnly();
             }.bind(this)            
         }).addTo(this.map);
-        
+
         this.map.locate({
             setView: false,
             watch: true
+        });
+    }
+
+    conquerTile(tile) {
+        fetch('/tiles', {
+            method: 'POST',
+            body: JSON.stringify({
+                tile: tile.properties
+            }),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            return response.json()
+        }).then(data => {
+            //console.log(data)
         });
     }
 
@@ -65,7 +86,6 @@ export default class TileMap {
     addEvents() {
         this.loadedEvent = jQuery.Event("loaded");
         $("body").bind("loaded", this.drawDiagram.bind(this));
-        
         this.map.on('locationfound', function(e) {                        
             var pulsingIcon = L.icon.pulse({iconSize:[20,20],color:'darkgreen'});
 
@@ -101,8 +121,28 @@ export default class TileMap {
     }
 
     load() {
-        // Load tile data from server here
-        $("body").trigger(this.loadedEvent);
+        fetch('/tiles', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            return response.json()
+        }).then(data => {
+            console.log("Loaded data succesfully", data)
+            data.forEach(tile => {
+                if(this.tilesMap[tile.id]) {
+                    this.tilesMap[tile.id].feature.properties.owner = tile.user_id
+                    this.updateTile(
+                        this.tilesMap[tile.id].feature
+                    )
+                }
+            });
+            
+            $("body").trigger(this.loadedEvent);
+        });
+        
         return;
     }
 

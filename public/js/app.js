@@ -22171,22 +22171,24 @@ function () {
         padding: 0.5
       })
     }).setView(_Config__WEBPACK_IMPORTED_MODULE_0__["default"].startPoint, _Config__WEBPACK_IMPORTED_MODULE_0__["default"].startZoom);
+    this.tilesMap = {};
     this.state = new _State__WEBPACK_IMPORTED_MODULE_3__["default"](this.map);
     this.addBaseMap();
     this.addEvents();
     this.load();
     this.state.diagram = this.generateDiagram();
-    this.tilesMap = {};
     this.tilesGeoJsonLayerGroup = L.geoJson(null, {
       onEachFeature: function (feature, layer) {
         this.tilesMap[feature.properties.id] = layer;
         layer.on('click', function (polygon) {
-          feature.properties.owner = "taken";
+          feature.properties.owner = user.id;
+          this.conquerTile(feature);
           this.updateTile(feature);
         }.bind(this, feature));
       }.bind(this),
       style: function (feature) {
-        return feature.geometry.properties.owner == "taken" ? _Style__WEBPACK_IMPORTED_MODULE_4__["default"].ownTile() : _Style__WEBPACK_IMPORTED_MODULE_4__["default"].gridOnly();
+        console.log(feature.geometry.properties.owner);
+        return feature.geometry.properties.owner == user.id ? _Style__WEBPACK_IMPORTED_MODULE_4__["default"].ownTile() : _Style__WEBPACK_IMPORTED_MODULE_4__["default"].gridOnly();
       }.bind(this)
     }).addTo(this.map);
     this.map.locate({
@@ -22196,6 +22198,23 @@ function () {
   }
 
   _createClass(TileMap, [{
+    key: "conquerTile",
+    value: function conquerTile(tile) {
+      fetch('/tiles', {
+        method: 'POST',
+        body: JSON.stringify({
+          tile: tile.properties
+        }),
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {//console.log(data)
+      });
+    }
+  }, {
     key: "newTile",
     value: function newTile(newGeoJsonTile) {
       this.tilesGeoJsonLayerGroup.addData(newGeoJsonTile);
@@ -22264,8 +22283,27 @@ function () {
   }, {
     key: "load",
     value: function load() {
-      // Load tile data from server here
-      $("body").trigger(this.loadedEvent);
+      var _this = this;
+
+      fetch('/tiles', {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        console.log("Loaded data succesfully", data);
+        data.forEach(function (tile) {
+          if (_this.tilesMap[tile.id]) {
+            _this.tilesMap[tile.id].feature.properties.owner = tile.user_id;
+
+            _this.updateTile(_this.tilesMap[tile.id].feature);
+          }
+        });
+        $("body").trigger(_this.loadedEvent);
+      });
       return;
     }
   }, {

@@ -13,11 +13,13 @@
 
 Route::get('/', function () {
     return view('splash');
-});
+})->name('splash');
 
 Route::get('/game', function () {
     return view('game');
-});
+})->middleware('auth');
+
+Route::resource('tiles', 'TileController');
 
 Route::get('login/github', 'Auth\LoginController@redirectToProvider');
 Route::get('login/github/callback', 'Auth\LoginController@handleProviderCallback');
