@@ -22184,8 +22184,8 @@ function () {
     this.tilesGeoJsonLayerGroup = L.geoJson(null, {
       onEachFeature: function (feature, layer) {
         this.tilesMap[feature.properties.id] = layer;
-        layer.on('click', function (polygon) {
-          this.conquerTile(feature);
+        layer.bindPopup("HEY");
+        layer.on('click', function (polygon) {//this.conquerTile(feature)
         }.bind(this, feature));
       }.bind(this),
       style: function (feature) {
@@ -22202,6 +22202,22 @@ function () {
   }
 
   _createClass(TileMap, [{
+    key: "autoConquerTile",
+    value: function autoConquerTile() {
+      console.log("Testing to conquer!"); // console.log( //this.conquerTile(
+      //     this.tilesMap[Point.XYtoId(
+      //         Geometry.latLngToXY({
+      //             "lat": this.marker.getLatLng().lat,
+      //             "lng": this.marker.getLatLng().lng
+      //         })[0],
+      //         Geometry.latLngToXY({
+      //             "lat": this.marker.getLatLng().lat,
+      //             "lng": this.marker.getLatLng().lng
+      //         })[1]                
+      //     )
+      // ]);
+    }
+  }, {
     key: "conquerTile",
     value: function conquerTile(tile) {
       var _this = this;
@@ -22272,6 +22288,7 @@ function () {
         }
 
         this.marker.setLatLng(e.latlng);
+        setInterval(this.autoConquerTile.bind(this), 5000);
       }.bind(this));
       this.map.on('zoom', function () {
         this.lastZoom = this.map.getZoom();
