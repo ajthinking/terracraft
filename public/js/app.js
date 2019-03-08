@@ -22182,11 +22182,8 @@ function () {
     this.tilesGeoJsonLayerGroup = L.geoJson(null, {
       onEachFeature: function (feature, layer) {
         this.tilesMap[feature.properties.id] = layer;
-        console.log("this.tilesMap populated here!");
         layer.on('click', function (polygon) {
-          //feature.properties.owner = user.id
-          //console.log(polygon.properties.id, polygon.properties.owner)
-          this.conquerTile(feature); //this.updateTile(feature);
+          this.conquerTile(feature);
         }.bind(this, feature));
       }.bind(this),
       style: function (feature) {
@@ -22227,14 +22224,14 @@ function () {
   }, {
     key: "updateTile",
     value: function updateTile(updatedGeoJsonTile) {
-      this.deleteTile(updatedGeoJsonTile);
-      this.newTile(updatedGeoJsonTile);
+      this.deleteTile(updatedGeoJsonTile); //this.newTile(updatedGeoJsonTile);
     }
   }, {
     key: "deleteTile",
     value: function deleteTile(tileToDelete) {
       var deletedTile = this.tilesMap[tileToDelete.geometry.properties.id];
       this.tilesGeoJsonLayerGroup.removeLayer(deletedTile);
+      delete this.tilesMap[tileToDelete.geometry.properties.id];
     }
   }, {
     key: "addBaseMap",
@@ -22366,13 +22363,7 @@ function () {
 
             if (cell.halfedges.length > 0) {
               if (this.tilesMap[cell.site.id] === undefined) {
-                var owner = -1;
-
-                if (cell.site.id in this.owners) {
-                  owner = this.owners[cell.site.id].user_id;
-                }
-
-                this.newTile(_Geometry__WEBPACK_IMPORTED_MODULE_1__["default"].cellToGeoJSON(cell, this.state.origo, owner));
+                this.newTile(_Geometry__WEBPACK_IMPORTED_MODULE_1__["default"].cellToGeoJSON(cell, this.state.origo, cell.site.id in this.owners ? this.owners[cell.site.id].user_id : -1));
               }
             } else {
               // Mark spot of faulty cells

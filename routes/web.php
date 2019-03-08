@@ -19,6 +19,8 @@ Route::get('/game', function () {
     return view('game');
 })->middleware('auth');
 
+Route::get('/rankings', 'RankingsController@index')->middleware('auth');
+
 Route::resource('tiles', 'TileController');
 
 Route::get('login/github', 'Auth\LoginController@redirectToProvider');

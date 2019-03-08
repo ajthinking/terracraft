@@ -26,13 +26,8 @@ export default class TileMap {
         this.tilesGeoJsonLayerGroup = L.geoJson(null,{
             onEachFeature: function (feature, layer) {
                 this.tilesMap[feature.properties.id] = layer;
-                console.log("this.tilesMap populated here!")
                 layer.on('click', function(polygon) {
-                    //feature.properties.owner = user.id
-                    //console.log(polygon.properties.id, polygon.properties.owner)
-
                     this.conquerTile(feature)
-                    //this.updateTile(feature);
                 }.bind(this, feature));                
             }.bind(this),
             style: function(feature) {
@@ -69,12 +64,13 @@ export default class TileMap {
     
     updateTile(updatedGeoJsonTile) {
         this.deleteTile(updatedGeoJsonTile);
-        this.newTile(updatedGeoJsonTile);
+        //this.newTile(updatedGeoJsonTile);
     }
     
     deleteTile(tileToDelete) {
         var deletedTile = this.tilesMap[tileToDelete.geometry.properties.id];
         this.tilesGeoJsonLayerGroup.removeLayer(deletedTile);
+        delete this.tilesMap[tileToDelete.geometry.properties.id]
     }
 
     addBaseMap() {
@@ -183,12 +179,12 @@ export default class TileMap {
                     var polygon_points = [];
                     
                     if(cell.halfedges.length > 0) {
-                        if(this.tilesMap[cell.site.id] === undefined) {
-                            var owner = -1;
-                            if (cell.site.id in this.owners) {
-                                owner = this.owners[cell.site.id].user_id
-                            } 
-                            this.newTile(Geometry.cellToGeoJSON(cell, this.state.origo, owner));
+                        if(this.tilesMap[cell.site.id] === undefined) { 
+                            this.newTile(Geometry.cellToGeoJSON(
+                                cell,
+                                this.state.origo,
+                                cell.site.id in this.owners ? this.owners[cell.site.id].user_id : -1
+                            ));
                         }
                     } else {
                         // Mark spot of faulty cells
