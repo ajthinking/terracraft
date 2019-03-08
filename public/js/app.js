@@ -22112,10 +22112,12 @@ function () {
     }
   }, {
     key: "enemyTile",
-    value: function enemyTile() {
+    value: function enemyTile(id) {
+      Math.seedrandom(id);
+      var redShade = 50 + Math.floor(Math.random() * 200);
       return {
         color: "darkred",
-        fillColor: "#990000",
+        fillColor: 'rgb(' + redShade + ',0,0)',
         weight: 1.5,
         fill: true,
         opacity: 1.0,
