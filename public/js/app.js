@@ -21766,7 +21766,7 @@ __webpack_require__.r(__webpack_exports__);
   padding: 10,
   startPoint: [46.045003, 12.694523],
   startZoom: 18,
-  minZoom: 16,
+  minZoom: 4,
   maxZoom: 22,
   drawDiagramUntilZoom: 14,
   tileLayer: 'https://api.mapbox.com/v4/mapbox.pencil/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoianVyaXNvbyIsImEiOiIzOTlkMDYxZTI1MGVmNGMxMTQ4OTVjNDE3N2I4ZWFmYiJ9.IRWCUNP1235EmbzVBhpCqw'
@@ -22187,11 +22187,14 @@ function () {
         }.bind(this, feature));
       }.bind(this),
       style: function (feature) {
-        return feature.geometry.properties.owner == user.id ? _Style__WEBPACK_IMPORTED_MODULE_4__["default"].ownTile() : _Style__WEBPACK_IMPORTED_MODULE_4__["default"].gridOnly();
+        if (feature.geometry.properties.owner == -1) {
+          return _Style__WEBPACK_IMPORTED_MODULE_4__["default"].gridOnly();
+        }
+
+        return feature.geometry.properties.owner == user.id ? _Style__WEBPACK_IMPORTED_MODULE_4__["default"].ownTile() : _Style__WEBPACK_IMPORTED_MODULE_4__["default"].enemyTile(feature.geometry.properties.owner);
       }.bind(this)
     }).addTo(this.map);
     this.map.locate({
-      setView: false,
       watch: true
     });
   }
@@ -22247,6 +22250,11 @@ function () {
     value: function addEvents() {
       this.loadedEvent = jQuery.Event("loaded");
       $("body").bind("loaded", this.drawDiagram.bind(this));
+      this.map.on('locationerror', function (e) {
+        alert("Could not find your position, please try again later!");
+        window.location = "/";
+        console.log(e);
+      });
       this.map.on('locationfound', function (e) {
         var pulsingIcon = L.icon.pulse({
           iconSize: [20, 20],

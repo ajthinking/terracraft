@@ -28,7 +28,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/game';
+    protected $redirectTo = '/map';
 
     /**
      * Create a new controller instance.

@@ -31,13 +31,16 @@ export default class TileMap {
                 }.bind(this, feature));                
             }.bind(this),
             style: function(feature) {
-                return feature.geometry.properties.owner == user.id ? Style.ownTile() : Style.gridOnly();
+                if(feature.geometry.properties.owner == -1) {
+                    return Style.gridOnly()
+                }
+
+                return feature.geometry.properties.owner == user.id ? Style.ownTile() : Style.enemyTile(feature.geometry.properties.owner);
             }.bind(this)            
         }).addTo(this.map);
 
         this.map.locate({
-            setView: false,
-            watch: true
+            watch: true,
         });
     }
 
@@ -84,7 +87,13 @@ export default class TileMap {
     addEvents() {
         this.loadedEvent = jQuery.Event("loaded");
         $("body").bind("loaded", this.drawDiagram.bind(this));
-        this.map.on('locationfound', function(e) {                        
+        this.map.on('locationerror', function(e) {
+            alert("Could not find your position, please try again later!")
+            window.location = "/";
+            console.log(e)
+        });
+
+        this.map.on('locationfound', function(e) {
             var pulsingIcon = L.icon.pulse({iconSize:[20,20],color:'darkgreen'});
 
             if(!this.userPos) {

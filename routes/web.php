@@ -15,8 +15,8 @@ Route::get('/', function () {
     return view('splash');
 })->name('splash');
 
-Route::get('/game', function () {
-    return view('game');
+Route::get('/map', function () {
+    return view('map');
 })->middleware('auth');
 
 Route::get('/rankings', 'RankingsController@index')->middleware('auth');
