@@ -6,7 +6,6 @@ import Style from './Style'
 
 export default class TileMap {
     constructor() {
-
         this.map = L.map('map', {
             zoomControl:false,
             renderer: L.svg({
@@ -17,6 +16,13 @@ export default class TileMap {
         // What is the purpose of the tilesMap?
         this.tilesMap = {};
         this.owners = {};
+        this.nicknames = {};
+        fetch('/users').then(response => {
+            return response.json()
+        }).then(data => {
+            this.nicknames = data
+        });
+
         this.state = new State(this.map);
         this.addBaseMap()
         this.addEvents()
@@ -27,6 +33,20 @@ export default class TileMap {
             onEachFeature: function (feature, layer) {
                 this.tilesMap[feature.properties.id] = layer;
                 layer.bindPopup("HEY");
+
+                layer.bindPopup("Loading...")
+                layer.on('click', function(e) {
+                    var popup = e.target.getPopup();
+                    var url="DYNAMIC_CONTENT_URL";
+
+                    if(this.nicknames[feature.properties.owner]) {
+                        popup.setContent(this.nicknames[feature.properties.owner]);
+                    } else {
+                        popup.setContent("Uncharted territory!");
+                    }
+                    popup.update();
+                }.bind(this))
+
                 layer.on('click', function(polygon) {
                     //this.conquerTile(feature)
                 }.bind(this, feature));                
@@ -46,19 +66,10 @@ export default class TileMap {
     }
 
     autoConquerTile() {
-        console.log("Testing to conquer!")
-        // console.log( //this.conquerTile(
-        //     this.tilesMap[Point.XYtoId(
-        //         Geometry.latLngToXY({
-        //             "lat": this.marker.getLatLng().lat,
-        //             "lng": this.marker.getLatLng().lng
-        //         })[0],
-        //         Geometry.latLngToXY({
-        //             "lat": this.marker.getLatLng().lat,
-        //             "lng": this.marker.getLatLng().lng
-        //         })[1]                
-        //     )
-        // ]);
+        var matches = leafletPip.pointInLayer(this.marker.getLatLng(), this.tilesGeoJsonLayerGroup);
+        if(matches.length == 1 && matches[0].feature.geometry.properties.owner != user.id) {
+            this.conquerTile(matches[0].feature.geometry)
+        }
     }
 
     conquerTile(tile) {
@@ -222,6 +233,4 @@ export default class TileMap {
             }.bind(this));
         }.bind(this), 1);        
     }
-
-
 }

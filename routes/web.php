@@ -22,6 +22,7 @@ Route::get('/map', function () {
 Route::get('/rankings', 'RankingsController@index')->middleware('auth');
 
 Route::resource('tiles', 'TileController');
+Route::resource('users', 'UserController');
 
 Route::get('login/github', 'Auth\LoginController@redirectToProvider');
 Route::get('login/github/callback', 'Auth\LoginController@handleProviderCallback');
