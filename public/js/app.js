@@ -32684,7 +32684,6 @@ function () {
         this.lastZoom = this.map.getZoom();
       }.bind(this));
       this.map.on('moveend', function () {
-        console.log("Map moveend");
         var center = this.map.getCenter();
         var xyCenter = _Geometry__WEBPACK_IMPORTED_MODULE_1__["default"].latLngToXY(center);
         var xCenter = xyCenter[0];
@@ -32706,7 +32705,6 @@ function () {
       var _this3 = this;
 
       var loadingJob = Math.floor(Math.random() * 100);
-      console.log("loading job", loadingJob, "started");
       fetch('/tiles', {
         method: 'GET',
         headers: {
@@ -32725,7 +32723,6 @@ function () {
 
           _this3.owners[tile.id] = tile;
         });
-        console.log("loading job", loadingJob, "completed with", data.length, "results");
         $("body").trigger(_this3.loadedEvent);
       });
       return;
@@ -32733,7 +32730,6 @@ function () {
   }, {
     key: "generateDiagram",
     value: function generateDiagram() {
-      console.log("Generating Diagram");
       var center = this.map.getCenter();
       var xyCenter = _Geometry__WEBPACK_IMPORTED_MODULE_1__["default"].latLngToXY(center);
       this.xLastCenter = xyCenter[0];
@@ -32770,7 +32766,6 @@ function () {
   }, {
     key: "drawDiagram",
     value: function drawDiagram() {
-      console.log("Drawing...");
       setTimeout(function () {
         var geojsonObjects = [];
         $.each(this.state.diagram.cells, function (indexCells, cell) {

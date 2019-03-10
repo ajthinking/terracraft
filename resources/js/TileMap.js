@@ -141,7 +141,6 @@ export default class TileMap {
         }.bind(this));
          
         this.map.on('moveend', function() {
-            console.log("Map moveend")
             var center = this.map.getCenter();
             var xyCenter = Geometry.latLngToXY(center);
             var xCenter = xyCenter[0];
@@ -160,7 +159,6 @@ export default class TileMap {
 
     load() {
         var loadingJob = Math.floor(Math.random() * 100)
-        console.log("loading job", loadingJob, "started")
         fetch('/tiles', {
             method: 'GET',
             headers: {
@@ -182,7 +180,6 @@ export default class TileMap {
                 this.owners[tile.id] = tile
                 
             });
-            console.log("loading job", loadingJob, "completed with", data.length, "results");
             $("body").trigger(this.loadedEvent);
         });
         
@@ -190,7 +187,6 @@ export default class TileMap {
     }
 
     generateDiagram() {
-        console.log("Generating Diagram")
         var center = this.map.getCenter();
         var xyCenter = Geometry.latLngToXY(center);
         this.xLastCenter = xyCenter[0];
@@ -209,7 +205,6 @@ export default class TileMap {
     }
 
     drawDiagram() {
-        console.log("Drawing...")
         setTimeout(function() {
             var geojsonObjects = [];
             $.each(this.state.diagram.cells, function(indexCells, cell) {
