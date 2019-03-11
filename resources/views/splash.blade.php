@@ -13,4 +13,8 @@
     <a class="flex" href="login/github">            
         <button class="mt-2 bg-white hover:bg-white text-black font-bold py-1 px-4 rounded m-2">Login with github</button>
     </a>
+    <a class="flex" href="login/facebook">            
+        <button class="mt-2 bg-white hover:bg-white text-black font-bold py-1 px-4 rounded m-2">Login with facebook</button>
+    </a>    
+
 </div>
