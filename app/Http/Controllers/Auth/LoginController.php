@@ -45,9 +45,9 @@ class LoginController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function redirectToProvider()
+    public function redirectToProvider($provider)
     {
-        return Socialite::driver('facebook')->redirect();
+        return Socialite::driver($provider)->redirect();
     }
     
     /**
@@ -55,9 +55,9 @@ class LoginController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function handleProviderCallback()
+    public function handleProviderCallback($provider)
     {
-        $user = Socialite::driver('facebook')->user();
+        $user = Socialite::driver($provider)->user();
         return $this->login($user);
     }
     /**
@@ -72,12 +72,10 @@ class LoginController extends Controller
             return redirect($this->redirectTo);
         }
 
-        dd($user);
-
         $authUser = User::create([
-            'nickname' => $user->nickname,
+            'nickname' => $user->nickname ? $user->nickname : $user->name,
             'avatar' => $user->avatar,
-            'provider' => 'github',
+            'provider' => request()->route('provider'),
             'provider_id' => $user->id,
         ]);
         Auth::login($authUser, true);
