@@ -47,7 +47,7 @@ class LoginController extends Controller
      */
     public function redirectToProvider()
     {
-        return Socialite::driver('github')->redirect();
+        return Socialite::driver('facebook')->redirect();
     }
     
     /**
@@ -57,7 +57,7 @@ class LoginController extends Controller
      */
     public function handleProviderCallback()
     {
-        $user = Socialite::driver('github')->user();
+        $user = Socialite::driver('facebook')->user();
         return $this->login($user);
     }
     /**
@@ -71,6 +71,8 @@ class LoginController extends Controller
             Auth::login($authUser, true);
             return redirect($this->redirectTo);
         }
+
+        dd($user);
 
         $authUser = User::create([
             'nickname' => $user->nickname,
