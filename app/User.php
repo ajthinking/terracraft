@@ -29,5 +29,9 @@ class User extends Authenticatable
 
     protected $casts = [
         'gold' => 'integer',
-    ];    
+    ];
+    
+    public function tiles() {
+        return $this->hasMany('App\Tile')->get();
+    }
 }

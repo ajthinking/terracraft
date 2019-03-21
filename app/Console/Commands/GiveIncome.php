@@ -9,35 +9,10 @@ use DB;
 
 class GiveIncome extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
+    const INCOME_PER_TILE = 100;
+
     protected $signature = 'terracraft:giveIncome';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Distribute income';
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
     public function handle()
     {
         DB::table('tiles')        
@@ -46,7 +21,7 @@ class GiveIncome extends Command
             ->select('user_id', 'nickname', 'avatar', DB::raw('count(*) as number_of_tiles'))
             ->get()->each(function($ranking) {
                 $user = User::find( $ranking->user_id );
-                $user->gold += $ranking->number_of_tiles;
+                $user->gold += $ranking->number_of_tiles * $this::INCOME_PER_TILE;
                 $user->save();
         });
     }
