@@ -6,9 +6,6 @@
     <a class="text-white hover:text-blue-darker" href="/rankings">Rankings</a>
   </li>
   <li class="mr-6">
-    <a class="text-white hover:text-blue-darker text-xs">Gold {{ 12345 }}</a>
-  </li>
-
-
-  
+    <a id="gold-count" class="text-white hover:text-blue-darker text-xs"></a>
+  </li>  
 </ul>
