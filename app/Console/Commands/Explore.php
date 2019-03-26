@@ -9,12 +9,18 @@ use DB;
 
 class Explore extends Command
 {
-    const EXPLORATION_COST = 1000;
-
     protected $signature = 'terracraft:explore';
 
     public function handle()
     {
-        User::find(1)->tiles()->random()->id;
+        User::all()->each(function($user) {
+            $candidateId = $user->tiles()->random()->randomNeighbourId();
+            if(!Tile::find($candidateId)) {
+                return Tile::create([ 
+                    'id' => $candidateId,
+                    'user_id' => $user->id
+                ]);
+            }
+        });
     }
 }

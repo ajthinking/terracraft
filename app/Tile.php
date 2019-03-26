@@ -30,4 +30,8 @@ class Tile extends Model
         10000000
         2529369980772
     */
+
+    public function randomNeighbour() {
+        return 123;
+    }
 }
