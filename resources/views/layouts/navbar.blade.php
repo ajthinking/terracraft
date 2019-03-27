@@ -4,7 +4,7 @@
 	</script>
 @endif
 
-<ul class="list-reset flex pl-6 bg-indigo p-2">
+<ul class="list-reset flex pl-6 bg-black p-2">
   <li class="mr-6">
     <a class="text-white hover:text-blue-darker" href="/map">Map</a>
   </li>
